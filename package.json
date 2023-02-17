@@ -1,0 +1,12 @@
+{
+    "name": "github-workflows",
+    "version": "1.0.0",
+    "description": "Github action application to manipulate the github api",
+    "author": "jpshrader",
+    "main": "main.ts",
+    "private": true,
+    "scripts": {},
+    "dependencies": {
+        "octokit": "^2.0.14"
+    }
+}
