@@ -4,9 +4,16 @@
     "description": "Github action application to manipulate the github api",
     "author": "jpshrader",
     "main": "main.ts",
+    "type": "module",
     "private": true,
-    "scripts": {},
+    "scripts": {
+        "start": "ts-node main.ts"
+    },
     "dependencies": {
         "octokit": "^2.0.14"
+    },
+    "devDependencies": {
+        "ts-node": "^10.9.1",
+        "typescript": "^4.9.5"
     }
 }
