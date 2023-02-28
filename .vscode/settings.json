@@ -1,5 +1,13 @@
 {
     "cSpell.words": [
         "jpshrader"
+    ],
+    "cSpell.ignorePaths": [
+        "yarn.lock",
+        "node_modules",
+        "vscode-extension",
+        ".git/objects",
+        ".vscode",
+        ".vscode-insiders"
     ]
 }
