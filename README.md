@@ -96,7 +96,7 @@ Examples:
 | `repo`           | object with repo `owner`/`slug` info           | see above example                | `true`   | `N/A`                                |
 | `from_branch`    | name of the origin branch                      | `main`                           | `true`   | `N/A`                                |
 | `to_branch`      | name of the destination branch                 | `main`                           | `true`   | `N/A`                                |
-| `title    `      | title of the resulting PR                      | `merge branch`                   | `false`  | `Merge {from_branch} to {to_branch}` |
+| `title`          | title of the resulting PR                      | `merge branch`                   | `false`  | `Merge {from_branch} to {to_branch}` |
 | `description`    | description of the resulting PR                | `merge branch`                   | `false`  | ` `                                  |
 | `labels`         | a list of label names to add to the PR         | `bug`                            | `false`  | `[]`                                 |
 | `reviewers`      | a list of user logins to request reviews from  | `jpshrader`                      | `false`  | `[]`                                 |

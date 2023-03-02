@@ -69,7 +69,6 @@ export const mergeBranch = async (client: Octokit, ins: any): Promise<boolean> =
             }
         }
 
-
         const reviewerResult = await addReviewers(client, ins.repo.owner, ins.repo.slug, prNum, reviewers, ins.team_reviewers);
         if (!reviewerResult.isSuccess()) {
             console.error(`failed to add reviewers: ${reviewerResult.data}`);
