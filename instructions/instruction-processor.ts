@@ -1,5 +1,5 @@
-import { Octokit } from "octokit";
-import { mergeBranch } from "./actions/merge-branch";
+import { Octokit } from 'octokit';
+import { mergeBranch } from './actions/merge-branch.js';
 
 const MERGE_BRANCH = 'merge_branch';
 
