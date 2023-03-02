@@ -1,63 +1,54 @@
 import { Octokit } from 'octokit';
-import { createBranch } from '../../client/branch-service.js';
+import { createBranch, getBranch } from '../../client/branch-service.js';
 import { addLabels, addReviewers, createPullRequest } from '../../client/pull-request-service.js';
 
-export const mergeBranch = async (client: Octokit, instruction: any): Promise<boolean> => {
-    if (!instruction.title) {
-        instruction.title = `Merge ${instruction.from_branch} into ${instruction.to_branch} (${instruction.repo.owner}/${instruction.repo.name})`;
+export const mergeBranch = async (client: Octokit, ins: any): Promise<boolean> => {
+    if (!ins.title) {
+        ins.title = `Merge ${ins.from_branch} into ${ins.to_branch} (${ins.repo.owner}/${ins.repo.name})`;
     }
-    if (!instruction.body) {
-        instruction.body = `Generated with the [api-workflows](https://github.com/jpshrader/github-workflows) tool.`;
+    if (!ins.body) {
+        ins.body = `Generated with the [api-workflows](https://github.com/jpshrader/github-workflows) tool.`;
     }
 
-    const newBranch = await createBranch(
-        client,
-        instruction.repo.owner,
-        instruction.repo.name,
-        instruction.sha,
-        instruction.from_branch
-    );
-
-    const pullRequest = await createPullRequest(
-        client,
-        instruction.repo.owner,
-        instruction.repo.name,
-        instruction.title,
-        instruction.body,
-        instruction.from_branch,
-        instruction.to_branch
-    );
-    if (!pullRequest.isSuccess()) {
-        console.log(`failed to create pull request: ${pullRequest.data}`);
+    const fromBranchResponse = await getBranch(client, ins.repo.owner, ins.repo.name, ins.from_branch);
+    if (!fromBranchResponse.isSuccess()) {
+        console.error(`failed to get branch: ${fromBranchResponse.data}`);
         return true;
     }
 
-    const pullRequestNumber = pullRequest.data.number;
-    if (instruction.reviewers || instruction.team_reviewers) {
-        const reviewers = await addReviewers(
-            client,
-            instruction.repo.owner,
-            instruction.repo.name,
-            pullRequestNumber,
-            instruction.reviewers,
-            instruction.team_reviewers
-        );
+    const toBranchResponse = await getBranch(client, ins.repo.owner, ins.repo.name, ins.from_branch);
+    if (!toBranchResponse.isSuccess()) {
+        console.error(`failed to get branch (${ins.to_branch}): ${toBranchResponse.data}`);
+        return true;
+    }
+
+    const timeStamp = Math.floor(Date.now() / 1000);
+    const newBranchName = `merge-${ins.from_branch}-into-${ins.to_branch}-${timeStamp}`;
+    const newBranch = await createBranch(client, ins.repo.owner, ins.repo.name, toBranchResponse.data.commit.sha, `refs/heads/${newBranchName}`);
+    if (!newBranch.isSuccess()) {
+        console.error(`failed to create branch: ${newBranch.data}`);
+        return true;
+    }
+
+    const pullRequest = await createPullRequest(client, ins.repo.owner, ins.repo.name, ins.title, ins.body, ins.from_branch, newBranchName);
+    if (!pullRequest.isSuccess()) {
+        console.error(`failed to create pull request: ${pullRequest.data}`);
+        return true;
+    }
+
+    const prNum = pullRequest.data.number;
+    if (ins.reviewers || ins.team_reviewers) {
+        const reviewers = await addReviewers(client, ins.repo.owner, ins.repo.name, prNum, ins.reviewers, ins.team_reviewers);
         if (!reviewers.isSuccess()) {
-            console.log(`failed to add reviewers: ${reviewers.data}`);
+            console.error(`failed to add reviewers: ${reviewers.data}`);
             return true;
         }
     }
 
-    if (instruction.labels) {
-        const labels = await addLabels(
-            client,
-            instruction.repo.owner,
-            instruction.repo.name,
-            pullRequestNumber,
-            instruction.labels
-        );
+    if (ins.labels) {
+        const labels = await addLabels(client, ins.repo.owner, ins.repo.name, prNum, ins.labels);
         if (!labels.isSuccess()) {
-            console.log(`failed to add labels: ${labels.data}`);
+            console.error(`failed to add labels: ${labels.data}`);
             return true;
         }
     }
