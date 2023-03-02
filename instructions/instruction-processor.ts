@@ -15,7 +15,7 @@ export const processInstructions = async (client: Octokit, instructions: any[]):
                 encounteredError = await mergeBranch(client, instruction);
                 break;
             default:
-                console.log(`unknown action: ${instruction.action}`);
+                console.error(`unknown action: ${instruction.action}`);
         }
     }
 }

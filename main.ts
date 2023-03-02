@@ -1,6 +1,7 @@
 import yargs from 'yargs';
 
 import { getGithubApiClient } from './client/github-api-client.js';
+import { processInstructions } from './instructions/instruction-processor.js';
 import { parseInstructions } from './instructions/instructions-parser.js';
 
 const argv = await yargs(process.argv.slice(2)).options({
@@ -17,7 +18,9 @@ const argv = await yargs(process.argv.slice(2)).options({
 }).argv;
 
 const instructions = parseInstructions(argv.instructions);
-console.log('parsed instructions: ', instructions);
+console.log('instructions: ', instructions);
 
 const client = getGithubApiClient(argv.accessToken);
 
+await processInstructions(client, instructions);
+console.log('instructions completed');
