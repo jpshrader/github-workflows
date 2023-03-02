@@ -1,5 +1,5 @@
 import { Octokit } from 'octokit';
-import { createBranch, getBranch } from '../../client/branch-service.js';
+import { compareBranches, createBranch, getBranch, mergeBranches } from '../../client/branch-service.js';
 import { addLabels, addReviewers, createPullRequest } from '../../client/pull-request-service.js';
 
 export const mergeBranch = async (client: Octokit, ins: any): Promise<boolean> => {
@@ -22,6 +22,17 @@ export const mergeBranch = async (client: Octokit, ins: any): Promise<boolean> =
         return true;
     }
 
+    const branchComparison = await compareBranches(client, ins.repo.owner, ins.repo.name, ins.from_branch, ins.to_branch);
+    if (!branchComparison.isSuccess()) {
+        console.error(`failed to compare branches: ${branchComparison.data}`);
+        return true;
+    }
+
+    if (branchComparison.data.ahead_by === 0 || branchComparison.data.files === 0) {
+        console.log(`SKIPPING: no update from ${ins.from_branch} needed`);
+        return false;
+    }
+
     const timeStamp = Math.floor(Date.now() / 1000);
     const newBranchName = `merge-${ins.from_branch}-into-${ins.to_branch}-${timeStamp}`;
     const newBranch = await createBranch(client, ins.repo.owner, ins.repo.name, toBranchResponse.data.commit.sha, `refs/heads/${newBranchName}`);
@@ -30,7 +41,13 @@ export const mergeBranch = async (client: Octokit, ins: any): Promise<boolean> =
         return true;
     }
 
-    const pullRequest = await createPullRequest(client, ins.repo.owner, ins.repo.name, ins.title, ins.body, ins.from_branch, newBranchName);
+    const mergeResult = await mergeBranches(client, ins.repo.owner, ins.repo.name, ins.from_branch, newBranchName, ins.title);
+    if (!mergeResult.isSuccess()) {
+        console.error(`failed to merge branches: ${mergeResult.data}`);
+        return true;
+    }
+
+    const pullRequest = await createPullRequest(client, ins.repo.owner, ins.repo.name, ins.title, ins.body, newBranchName, ins.to_branch);
     if (!pullRequest.isSuccess()) {
         console.error(`failed to create pull request: ${pullRequest.data}`);
         return true;
@@ -38,9 +55,18 @@ export const mergeBranch = async (client: Octokit, ins: any): Promise<boolean> =
 
     const prNum = pullRequest.data.number;
     if (ins.reviewers || ins.team_reviewers) {
-        const reviewers = await addReviewers(client, ins.repo.owner, ins.repo.name, prNum, ins.reviewers, ins.team_reviewers);
-        if (!reviewers.isSuccess()) {
-            console.error(`failed to add reviewers: ${reviewers.data}`);
+        const prAuthor: string = pullRequest.data.user.login;
+        const reviewers = [];
+        for (const reviewer of ins.reviewers) {
+            if (reviewer.toLowerCase().trim() !== prAuthor.toLowerCase().trim()) {
+                reviewers.push(reviewer);
+            }
+        }
+
+
+        const reviewerResult = await addReviewers(client, ins.repo.owner, ins.repo.name, prNum, reviewers, ins.team_reviewers);
+        if (!reviewerResult.isSuccess()) {
+            console.error(`failed to add reviewers: ${reviewerResult.data}`);
             return true;
         }
     }
@@ -53,5 +79,7 @@ export const mergeBranch = async (client: Octokit, ins: any): Promise<boolean> =
         }
     }
 
+    const prUrl = pullRequest.data.html_url;
+    console.log(`SUCCESS: Created Pull Request: ${prUrl}`);
     return false;
 };
