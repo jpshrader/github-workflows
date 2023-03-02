@@ -1,5 +1,5 @@
-import { Octokit } from "octokit";
-import { getResponse, GithubApiResponse } from "./github-api-client";
+import { Octokit } from 'octokit';
+import { getResponse, GithubApiResponse } from './github-api-client.js';
 
 /**
  * Creates a PR that merges two branches together.`
