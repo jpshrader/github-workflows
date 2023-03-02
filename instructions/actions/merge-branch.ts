@@ -10,25 +10,25 @@ import { addLabels, addReviewers, createPullRequest } from '../../client/pull-re
  */
 export const mergeBranch = async (client: Octokit, ins: any): Promise<boolean> => {
     if (!ins.title) {
-        ins.title = `Merge ${ins.from_branch} into ${ins.to_branch} (${ins.repo.owner}/${ins.repo.name})`;
+        ins.title = `Merge ${ins.from_branch} into ${ins.to_branch} (${ins.repo.owner}/${ins.repo.slug})`;
     }
     if (!ins.body) {
         ins.body = `Generated with the [api-workflows](https://github.com/jpshrader/github-workflows) tool.`;
     }
 
-    const fromBranchResponse = await getBranch(client, ins.repo.owner, ins.repo.name, ins.from_branch);
+    const fromBranchResponse = await getBranch(client, ins.repo.owner, ins.repo.slug, ins.from_branch);
     if (!fromBranchResponse.isSuccess()) {
         console.error(`failed to get branch: ${fromBranchResponse.data}`);
         return true;
     }
 
-    const toBranchResponse = await getBranch(client, ins.repo.owner, ins.repo.name, ins.from_branch);
+    const toBranchResponse = await getBranch(client, ins.repo.owner, ins.repo.slug, ins.from_branch);
     if (!toBranchResponse.isSuccess()) {
         console.error(`failed to get branch (${ins.to_branch}): ${toBranchResponse.data}`);
         return true;
     }
 
-    const branchComparison = await compareBranches(client, ins.repo.owner, ins.repo.name, ins.from_branch, ins.to_branch);
+    const branchComparison = await compareBranches(client, ins.repo.owner, ins.repo.slug, ins.from_branch, ins.to_branch);
     if (!branchComparison.isSuccess()) {
         console.error(`failed to compare branches: ${branchComparison.data}`);
         return true;
@@ -41,19 +41,19 @@ export const mergeBranch = async (client: Octokit, ins: any): Promise<boolean> =
 
     const timeStamp = Math.floor(Date.now() / 1000);
     const newBranchName = `merge-${ins.from_branch}-into-${ins.to_branch}-${timeStamp}`;
-    const newBranch = await createBranch(client, ins.repo.owner, ins.repo.name, toBranchResponse.data.commit.sha, `refs/heads/${newBranchName}`);
+    const newBranch = await createBranch(client, ins.repo.owner, ins.repo.slug, toBranchResponse.data.commit.sha, `refs/heads/${newBranchName}`);
     if (!newBranch.isSuccess()) {
         console.error(`failed to create branch: ${newBranch.data}`);
         return true;
     }
 
-    const mergeResult = await mergeBranches(client, ins.repo.owner, ins.repo.name, ins.from_branch, newBranchName, ins.title);
+    const mergeResult = await mergeBranches(client, ins.repo.owner, ins.repo.slug, ins.from_branch, newBranchName, ins.title);
     if (!mergeResult.isSuccess()) {
         console.error(`failed to merge branches: ${mergeResult.data}`);
         return true;
     }
 
-    const pullRequest = await createPullRequest(client, ins.repo.owner, ins.repo.name, ins.title, ins.body, newBranchName, ins.to_branch);
+    const pullRequest = await createPullRequest(client, ins.repo.owner, ins.repo.slug, ins.title, ins.body, newBranchName, ins.to_branch);
     if (!pullRequest.isSuccess()) {
         console.error(`failed to create pull request: ${pullRequest.data}`);
         return true;
@@ -70,7 +70,7 @@ export const mergeBranch = async (client: Octokit, ins: any): Promise<boolean> =
         }
 
 
-        const reviewerResult = await addReviewers(client, ins.repo.owner, ins.repo.name, prNum, reviewers, ins.team_reviewers);
+        const reviewerResult = await addReviewers(client, ins.repo.owner, ins.repo.slug, prNum, reviewers, ins.team_reviewers);
         if (!reviewerResult.isSuccess()) {
             console.error(`failed to add reviewers: ${reviewerResult.data}`);
             return true;
@@ -78,7 +78,7 @@ export const mergeBranch = async (client: Octokit, ins: any): Promise<boolean> =
     }
 
     if (ins.labels) {
-        const labels = await addLabels(client, ins.repo.owner, ins.repo.name, prNum, ins.labels);
+        const labels = await addLabels(client, ins.repo.owner, ins.repo.slug, prNum, ins.labels);
         if (!labels.isSuccess()) {
             console.error(`failed to add labels: ${labels.data}`);
             return true;
