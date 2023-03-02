@@ -13,7 +13,7 @@ import { getResponse, GithubApiResponse } from './github-api-client.js';
  * @param {string}  toBranch The destination branch to merge into.
  */
 export const createPullRequest = async (client: Octokit, ownerName: string, repoName: string, title: string, body: string, fromBranch: string, toBranch: string): Promise<GithubApiResponse<any>> => {
-    return getResponse(await client.request('POST /repos/{owner}/{repo}/pulls', {
+    return getResponse(async () => await client.request('POST /repos/{owner}/{repo}/pulls', {
         owner: ownerName,
         repo: repoName,
         title: title,
@@ -34,7 +34,7 @@ export const createPullRequest = async (client: Octokit, ownerName: string, repo
  * @param {string[]} teamReviewers List of teams to add as reviewers.
  */
 export const addReviewers = async (client: Octokit, ownerName: string, repoName: string, pullRequestNumber: number, reviewers: string[], teamReviewers: string[]): Promise<GithubApiResponse<any>> => {
-    return getResponse(await client.request('POST /repos/{owner}/{repo}/pulls/{pull_number}/requested_reviewers', {
+    return getResponse(async () => await client.request('POST /repos/{owner}/{repo}/pulls/{pull_number}/requested_reviewers', {
         owner: ownerName,
         repo: repoName,
         pull_number: pullRequestNumber,
@@ -53,7 +53,7 @@ export const addReviewers = async (client: Octokit, ownerName: string, repoName:
  * @param {string[]} labels List of labels to add to the PR.
  */
 export const addLabels = async (client: Octokit, ownerName: string, repoName: string, pullRequestNumber: number, labels: string[]): Promise<GithubApiResponse<any>> => {
-    return getResponse(await client.request('POST /repos/{owner}/{repo}/issues/{issue_number}/labels', {
+    return getResponse(async () => await client.request('POST /repos/{owner}/{repo}/issues/{issue_number}/labels', {
         owner: ownerName,
         repo: repoName,
         issue_number: pullRequestNumber,

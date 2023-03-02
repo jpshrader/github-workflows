@@ -7,12 +7,16 @@ export const getGithubApiClient = (apiToken: string): Octokit => {
     });
 };
 
-export function getResponse<T>(octokitResponse: OctokitResponse<T>): GithubApiResponse<T> {
-    return new GithubApiResponse(
-        octokitResponse.url,
-        octokitResponse.data,
-        octokitResponse.headers,
-        octokitResponse.status);
+export async function getResponse<T>(getOctokitResponse: () => Promise<OctokitResponse<T>>): Promise<GithubApiResponse<T>> {
+    try {
+        const res = await getOctokitResponse();
+        return new GithubApiResponse(res.url, res.data, res.headers, res.status);
+    } catch (e) {
+        if (e.response) {
+            return new GithubApiResponse(e.response.url, e.response.data, e.response.headers, e.response.status);
+        }
+        return new GithubApiResponse('', e, {}, 500);
+    }
 }
 
 export class GithubApiResponse<T> {
@@ -29,8 +33,8 @@ export class GithubApiResponse<T> {
     }
 
     /**
-     * 
-     * @returns 
+     * Returns true if the status code is between 200 and 299.
+     * @returns {boolean} True if the status code is between 200 and 299.
      */
     isSuccess(): boolean {
         return this.statusCode >= 200 && this.statusCode <= 299;

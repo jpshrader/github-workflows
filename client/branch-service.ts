@@ -11,7 +11,7 @@ import { getResponse, GithubApiResponse } from './github-api-client.js';
  * @param {string} ref Fully qualified branch name (ex. `refs/head/{branch_name}`).
  */
 export const createBranch = async (client: Octokit, ownerName: string, repoName: string, sha: string, ref: string): Promise<GithubApiResponse<any>> => {
-  return getResponse(await client.request('POST /repos/{owner}/{repo}/git/refs', {
+  return getResponse(async () => await client.request('POST /repos/{owner}/{repo}/git/refs', {
     owner: ownerName,
     repo: repoName,
     ref: ref,
@@ -28,7 +28,7 @@ export const createBranch = async (client: Octokit, ownerName: string, repoName:
  * @param {string} branchName Branch name to fetch
  */
 export const getBranch = async (client: Octokit, ownerName: string, repoName: string, branchName: string): Promise<GithubApiResponse<any>> => {
-  return getResponse(await client.request('GET /repos/{owner}/{repo}/branches/{branch}', {
+  return getResponse(async () => await client.request('GET /repos/{owner}/{repo}/branches/{branch}', {
     owner: ownerName,
     repo: repoName,
     branch: branchName,
@@ -46,7 +46,7 @@ export const getBranch = async (client: Octokit, ownerName: string, repoName: st
  * @param {string} message Commit message.
  */
 export const mergeBranches = async (client: Octokit, ownerName: string, repoName: string, from_branch: string, to_branch: string, message: string): Promise<GithubApiResponse<any>> => {
-  return getResponse(await client.request('POST /repos/{owner}/{repo}/merges', {
+  return getResponse(async () => await client.request('POST /repos/{owner}/{repo}/merges', {
     owner: ownerName,
     repo: repoName,
     base: to_branch,
@@ -65,7 +65,7 @@ export const mergeBranches = async (client: Octokit, ownerName: string, repoName
  * @param {string} to_branch Branch to compare into.
  */
 export const compareBranches = async (client: Octokit, ownerName: string, repoName: string, from_branch: string, to_branch: string): Promise<GithubApiResponse<any>> => {
-  return getResponse(await client.request('GET /repos/{owner}/{repo}/compare/{basehead}', {
+  return getResponse(async () => await client.request('GET /repos/{owner}/{repo}/compare/{basehead}', {
     owner: ownerName,
     repo: repoName,
     basehead: `${to_branch}...${from_branch}`,

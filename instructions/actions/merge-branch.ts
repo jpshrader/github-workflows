@@ -2,6 +2,12 @@ import { Octokit } from 'octokit';
 import { compareBranches, createBranch, getBranch, mergeBranches } from '../../client/branch-service.js';
 import { addLabels, addReviewers, createPullRequest } from '../../client/pull-request-service.js';
 
+/**
+ * Processes a `merge_branch` instruction.
+ *
+ * @param {Octokit} client Github Octokit client.
+ * @param {any} ins A `merge_branch` instruction set.
+ */
 export const mergeBranch = async (client: Octokit, ins: any): Promise<boolean> => {
     if (!ins.title) {
         ins.title = `Merge ${ins.from_branch} into ${ins.to_branch} (${ins.repo.owner}/${ins.repo.name})`;
