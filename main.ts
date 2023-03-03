@@ -20,5 +20,10 @@ const argv = await yargs(process.argv.slice(2)).options({
 const instructions = parseInstructions(argv.instructions);
 const client = getGithubApiClient(argv.accessToken);
 
-await processInstructions(client, instructions);
-console.log('instructions completed');
+const err = await processInstructions(client, instructions);
+if (err) {
+    console.error('encountered error processing instructions: ', err);
+    process.exit(1);
+}
+
+console.log('instructions completed successfully');

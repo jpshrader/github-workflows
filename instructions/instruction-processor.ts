@@ -5,22 +5,24 @@ import { mergeBranch } from './actions/merge-branch.js';
 const MERGE_BRANCH = 'merge_branch';
 const CREATE_LABEL = 'create_label';
 
-export const processInstructions = async (client: Octokit, instructions: any[]): Promise<void> => {
-    var encounteredError = false;
+export const processInstructions = async (client: Octokit, instructions: any[]): Promise<Error> => {
+    var err: Error = null;
     for (const instruction of instructions) {
-        if (encounteredError) {
-            return;
+        if (err) {
+            return err;
         }
 
         switch (instruction.action) {
             case MERGE_BRANCH:
-                encounteredError = await mergeBranch(client, instruction);
+                err = await mergeBranch(client, instruction);
                 break;
             case CREATE_LABEL:
-                encounteredError = await createLabel(client, instruction);
+                err = await createLabel(client, instruction);
                 break;
             default:
                 console.error(`unknown action: ${instruction.action}`);
         }
     }
+
+    return err
 }
