@@ -52,7 +52,7 @@ jobs:
             - action: merge_branch
                 repo:
                   owner: jpshrader
-                  slug: ${{ github.event.inputs.access_token }}
+                  slug: ${{ github.event.inputs.repo }}
                 from_branch: test
                 to_branch: main
                 title: release workflows
