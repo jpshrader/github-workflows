@@ -11,5 +11,5 @@ export const parseInstructions = (instructionString: string): any[] => {
         instructionString = readFileSync(instructionString, { encoding: 'utf-8' });
     }
 
-    return (load(instructionString) as any).instructions;
+    return load(instructionString) as any[];
 };

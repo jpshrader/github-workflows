@@ -2,7 +2,6 @@ import { Octokit } from 'octokit';
 import { getLabel, createLabel as createLbl } from '../../client/label-service.js';
 
 export const createLabel = async (client: Octokit, ins: any): Promise<Error> => {
-    var err: Error = null;
     for (const repo of ins.repos) {
         const label = await getLabel(client, repo.owner, repo.slug, ins.name);
         if (label.isSuccess()) {
@@ -16,5 +15,5 @@ export const createLabel = async (client: Octokit, ins: any): Promise<Error> => 
         }
         console.log(`SUCCESS: created label ${ins.name} on ${repo.owner}/${repo.slug}`);
     }
-    return err;
+    return null;
 }

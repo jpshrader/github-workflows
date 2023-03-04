@@ -23,7 +23,47 @@ TODO
 
 ## Usage
 
-### Referencing Yaml files
+### Inline Instructions:
+
+```
+name: 'Run GitHub Utility'
+
+on:
+  workflow_dispatch:
+    inputs:
+      repo:
+        description: 'Repo name'
+        type: string
+        required: true
+      access_token:
+        description: 'GitHub Api Access Token'
+        type: string
+        required: true
+
+jobs:
+  execute:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: jpshrader/github-workflows@main
+        with:
+          access_token: ${{ github.event.inputs.access_token }}
+          instructions:
+            - action: merge_branch
+                repo:
+                  owner: jpshrader
+                  slug: ${{ github.event.inputs.access_token }}
+                from_branch: test
+                to_branch: main
+                title: release workflows
+                body: testing
+                labels:
+                  - bug
+                reviewers:
+                  - jpshrader
+```
+
+### Referencing Yaml File Instructions:
 
 ```
 name: 'Run GitHub Utility'
@@ -54,8 +94,6 @@ jobs:
           access_token: ${{ github.event.inputs.access_token }}
           instructions: ${{ github.event.inputs.instructions }}
 ```
-
-### 
 
 | Argument       | Description                                    | Example Value                    | Required | Supported Value(s) |
 |----------------|------------------------------------------------|----------------------------------|----------|--------------------|
@@ -108,7 +146,7 @@ Examples:
 
 ### Create Label
 
-The `create_label` instruction creates a given label across a list of repos. If the label already exists, it will update the existing label with the provided color/description.
+The `create_label` instruction creates a given label across a list of repos.
 
 Examples:
 ```

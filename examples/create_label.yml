@@ -1,0 +1,8 @@
+- action: create_label
+  repos:
+    -
+      owner: jpshrader
+      slug: github-workflows
+  name: testing
+  color: ffffff
+  description: 'testing stuff'

@@ -18,12 +18,14 @@ export const mergeBranch = async (client: Octokit, ins: any): Promise<Error> => 
 
     const fromBranchResponse = await getBranch(client, ins.repo.owner, ins.repo.slug, ins.from_branch);
     if (!fromBranchResponse.isSuccess()) {
-        return new Error(`failed to find branch (${ins.from_branch}): ${fromBranchResponse.data}`);
+        console.log(`SKIPPING: failed to find branch (${ins.from_branch}): ${fromBranchResponse.data}`);
+        return null;
     }
 
     const toBranchResponse = await getBranch(client, ins.repo.owner, ins.repo.slug, ins.from_branch);
     if (!toBranchResponse.isSuccess()) {
-        return new Error(`failed to find branch (${ins.to_branch}): ${toBranchResponse.data}`);
+        console.log(`SKIPPING: failed to find branch (${ins.to_branch}): ${toBranchResponse.data}`);
+        return null;
     }
 
     const branchComparison = await compareBranches(client, ins.repo.owner, ins.repo.slug, ins.from_branch, ins.to_branch);

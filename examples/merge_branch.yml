@@ -1,0 +1,23 @@
+- action: merge_branch
+  repo:
+    owner: jpshrader
+    slug: github-workflows
+  from_branch: main
+  to_branch: test
+  labels:
+    - bug
+  reviewers:
+    - jpshrader
+
+- action: merge_branch
+  repo:
+    owner: jpshrader
+    slug: github-workflows
+  from_branch: test
+  to_branch: main
+  title: release workflows
+  body: testing
+  labels:
+    - bug
+  reviewers:
+    - jpshrader
