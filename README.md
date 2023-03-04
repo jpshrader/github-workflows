@@ -23,6 +23,8 @@ TODO
 
 ## Usage
 
+### Referencing Yaml files
+
 ```
 name: 'Run GitHub Utility'
 
@@ -52,6 +54,8 @@ jobs:
           access_token: ${{ github.event.inputs.access_token }}
           instructions: ${{ github.event.inputs.instructions }}
 ```
+
+### 
 
 | Argument       | Description                                    | Example Value                    | Required | Supported Value(s) |
 |----------------|------------------------------------------------|----------------------------------|----------|--------------------|
