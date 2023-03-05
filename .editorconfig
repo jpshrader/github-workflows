@@ -6,6 +6,15 @@ end_of_line = lf
 indent_size = 4
 indent_style = tab
 insert_final_newline = true
+quote_type = single
+
+[*.md]
+trim_trailing_whitespace = true
+
+[*.ts]
+indent_size = 4
+indent_style = tab
+insert_final_newline = true
 trim_trailing_whitespace = true
 quote_type = single
 
