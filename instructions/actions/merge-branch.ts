@@ -41,7 +41,7 @@ export const mergeBranch = async (client: Octokit, ins: any): Promise<Error> => 
     const newBranchName = `merge-${ins.from_branch}-into-${ins.to_branch}-${timeStamp}`;
     const newBranch = await createBranch(client, ins.repo.owner, ins.repo.slug, toBranchResponse.data.commit.sha, `refs/heads/${newBranchName}`);
     if (!newBranch.isSuccess()) {
-        return new Error(`failed to create branch: ${newBranch.data}`);
+        return new Error(`failed to create intermediate branch (${newBranchName}): ${newBranch.data}`);
     }
 
     var prOriginBranch = newBranchName;
@@ -52,6 +52,8 @@ export const mergeBranch = async (client: Octokit, ins: any): Promise<Error> => 
         }
         console.warn(`WARNING: merge conflict detected for ${ins.from_branch} => ${ins.to_branch} (${ins.repo.owner}/${ins.repo.slug})`);
         prOriginBranch = ins.to_branch;
+        ins.title  = `[CONFLICT] ${ins.title}}`
+        ins.body = `Merge conflicts were detected when merging ${ins.from_branch} to ${ins.to_branch} - these will need to be resolved manually.<br/>${ins.body}`
     }
 
     const pullRequest = await createPullRequest(client, ins.repo.owner, ins.repo.slug, ins.title, ins.body, prOriginBranch, ins.to_branch);
