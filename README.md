@@ -26,8 +26,6 @@ TODO
 ### Inline Instructions:
 
 ```
-name: 'Run GitHub Utility'
-
 on:
   workflow_dispatch:
     inputs:
@@ -66,13 +64,11 @@ jobs:
 ### Referencing Yaml File Instructions:
 
 ```
-name: 'Run GitHub Utility'
-
 on:
   workflow_dispatch:
     inputs:
       instructions:
-        description: 'GitHub Utility instruction set to use'
+        description: 'GitHub instruction set to use'
         type: choice
         options:
           - './list-empty-branches.yml'

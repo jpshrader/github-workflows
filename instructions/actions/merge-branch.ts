@@ -5,8 +5,8 @@ import { addLabels, addReviewers, createPullRequest } from '../../client/pull-re
 /**
  * Processes a `merge_branch` instruction.
  *
- * @param {Octokit} client Github Octokit client.
- * @param {any} ins A `merge_branch` instruction set.
+ * @param {Octokit} client  Github Octokit client.
+ * @param {any}     ins     A `merge_branch` instruction set.
  */
 export const mergeBranch = async (client: Octokit, ins: any): Promise<Error> => {
     if (!ins.title) {

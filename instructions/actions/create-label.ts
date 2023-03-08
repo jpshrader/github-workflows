@@ -1,6 +1,12 @@
 import { Octokit } from 'octokit';
 import { getLabel, createLabel as createLbl } from '../../client/label-service.js';
 
+/**
+ * Processes a `create_label` instruction.
+ *
+ * @param {Octokit} client  Github Octokit client.
+ * @param {any}     ins     A `create_label` instruction set.
+ */
 export const createLabel = async (client: Octokit, ins: any): Promise<Error> => {
     for (const repo of ins.repos) {
         const label = await getLabel(client, repo.owner, repo.slug, ins.name);
