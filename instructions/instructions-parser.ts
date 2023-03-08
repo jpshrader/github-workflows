@@ -13,3 +13,15 @@ export const parseInstructions = (instructionString: string): any[] => {
 
     return load(instructionString) as any[];
 };
+
+export const argToList = (items: string | string[]): string[] => {
+    if (!items) {
+        return [];
+    }
+
+    if (Array.isArray(items)) {
+        return items;
+    }
+
+    return items.split(',');
+};

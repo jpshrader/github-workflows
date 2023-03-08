@@ -1,6 +1,7 @@
 import { Octokit } from 'octokit';
 import { compareBranches, createBranch, getBranch, mergeBranches } from '../../client/branch-service.js';
 import { addLabels, addReviewers, createPullRequest } from '../../client/pull-request-service.js';
+import { argToList } from '../instructions-parser.js';
 
 /**
  * Processes a `merge_branch` instruction.
@@ -65,22 +66,25 @@ export const mergeBranch = async (client: Octokit, ins: any): Promise<Error> => 
     if (ins.reviewers || ins.team_reviewers) {
         const prAuthor: string = pullRequest.data.user.login;
         const reviewers = [];
-        for (const reviewer of ins.reviewers) {
+        const reviewerList = argToList(ins.reviewers);
+        for (const reviewer of reviewerList) {
             if (reviewer.toLowerCase().trim() !== prAuthor.toLowerCase().trim()) {
                 reviewers.push(reviewer);
             }
         }
 
-        const reviewerResult = await addReviewers(client, ins.repo.owner, ins.repo.slug, prNum, reviewers, ins.team_reviewers);
+        const teamReviewers = argToList(ins.team_reviewers);
+        const reviewerResult = await addReviewers(client, ins.repo.owner, ins.repo.slug, prNum, reviewers, teamReviewers);
         if (!reviewerResult.isSuccess()) {
             return new Error(`failed to add reviewers: ${reviewerResult.data}`);
         }
     }
 
     if (ins.labels) {
-        const labels = await addLabels(client, ins.repo.owner, ins.repo.slug, prNum, ins.labels);
-        if (!labels.isSuccess()) {
-            return new Error(`failed to add labels: ${labels.data}`);
+        const labels = argToList(ins.labels);
+        const labelResult = await addLabels(client, ins.repo.owner, ins.repo.slug, prNum, ins.labels);
+        if (!labelResult.isSuccess()) {
+            return new Error(`failed to add labels: ${labelResult.data}`);
         }
     }
 

@@ -1,0 +1,15 @@
+- action: dry_run
+  labels: 'one,two'
+  reviewers: 'three,four'
+  team_reviewers: 'people,engineers'
+
+- action: dry_run
+  labels:
+    - five
+    - six
+  reviewers:
+    - seven
+    - eight
+  team_reviewers:
+    - people
+    - engineers
