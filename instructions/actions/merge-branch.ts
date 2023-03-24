@@ -52,7 +52,7 @@ export const mergeBranch = async (client: Octokit, ins: any): Promise<Error> => 
             return new Error(`failed to merge branches: ${mergeResult.data}`);
         }
         console.warn(`WARNING: merge conflict detected for ${ins.origin} => ${ins.destination} (${ins.repo.owner}/${ins.repo.slug})`);
-        ins.title  = `[MERGE CONFLICT] ${ins.title}}`
+        ins.title = `[MERGE CONFLICT] ${ins.title}}`
         ins.body = `Merge conflicts were detected when merging ${ins.origin} to ${ins.destination} - you will need to resolve these conflicts manually.<br/>
         \`git checkout origin/${newBranchName}\`<br/>
         \`git merge origin/${ins.origin}\`<br/>
