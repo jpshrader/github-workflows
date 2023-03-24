@@ -23,7 +23,7 @@ export const mergeBranch = async (client: Octokit, ins: any): Promise<Error> => 
         return null;
     }
 
-    const toBranchResponse = await getBranch(client, ins.repo.owner, ins.repo.slug, ins.from_branch);
+    const toBranchResponse = await getBranch(client, ins.repo.owner, ins.repo.slug, ins.to_branch);
     if (!toBranchResponse.isSuccess()) {
         console.log(`SKIPPING: failed to find branch (${ins.to_branch}): ${toBranchResponse.data}`);
         return null;
@@ -82,7 +82,7 @@ export const mergeBranch = async (client: Octokit, ins: any): Promise<Error> => 
 
     if (ins.labels) {
         const labels = argToList(ins.labels);
-        const labelResult = await addLabels(client, ins.repo.owner, ins.repo.slug, prNum, ins.labels);
+        const labelResult = await addLabels(client, ins.repo.owner, ins.repo.slug, prNum, labels);
         if (!labelResult.isSuccess()) {
             return new Error(`failed to add labels: ${labelResult.data}`);
         }

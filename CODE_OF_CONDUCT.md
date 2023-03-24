@@ -1,3 +1,3 @@
 # Contributor Code of Conduct
 
-[https://youtu.be/8IfTwS7dGz0](https://youtu.be/8IfTwS7dGz0?t=36)
+[Code of Conduct](https://youtube.com/watch?v=IoJzp2hLBtY&feature=shares)
