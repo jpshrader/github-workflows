@@ -35,7 +35,8 @@ export const mergeBranch = async (client: Octokit, ins: any): Promise<Error> => 
     }
 
     if (branchComparison.data.ahead_by === 0 || branchComparison.data.files === 0) {
-        return new Error(`SKIPPING: no changes found from ${ins.from_branch} => ${ins.to_branch} (${ins.repo.owner}/${ins.repo.slug})`);
+        console.log(`SKIPPING: no changes found from ${ins.from_branch} => ${ins.to_branch} (${ins.repo.owner}/${ins.repo.slug})`);
+        return null;
     }
 
     const timeStamp = Math.floor(Date.now() / 1000);
@@ -45,19 +46,20 @@ export const mergeBranch = async (client: Octokit, ins: any): Promise<Error> => 
         return new Error(`failed to create intermediate branch (${newBranchName}): ${newBranch.data}`);
     }
 
-    var prOriginBranch = newBranchName;
     const mergeResult = await mergeBranches(client, ins.repo.owner, ins.repo.slug, ins.from_branch, newBranchName, ins.title);
     if (!mergeResult.isSuccess()) {
         if (mergeResult.statusCode !== 409) {
             return new Error(`failed to merge branches: ${mergeResult.data}`);
         }
         console.warn(`WARNING: merge conflict detected for ${ins.from_branch} => ${ins.to_branch} (${ins.repo.owner}/${ins.repo.slug})`);
-        prOriginBranch = ins.to_branch;
-        ins.title  = `[CONFLICT] ${ins.title}}`
-        ins.body = `Merge conflicts were detected when merging ${ins.from_branch} to ${ins.to_branch} - these will need to be resolved manually.<br/>${ins.body}`
+        ins.title  = `[MERGE CONFLICT] ${ins.title}}`
+        ins.body = `Merge conflicts were detected when merging ${ins.from_branch} to ${ins.to_branch} - you will need to resolve these conflicts manually.<br/>
+        \`git checkout origin/${newBranchName}\`<br/>
+        \`git merge origin/${ins.from_branch}\`<br/>
+        ${ins.body}`
     }
 
-    const pullRequest = await createPullRequest(client, ins.repo.owner, ins.repo.slug, ins.title, ins.body, prOriginBranch, ins.to_branch);
+    const pullRequest = await createPullRequest(client, ins.repo.owner, ins.repo.slug, ins.title, ins.body, newBranchName, ins.to_branch);
     if (!pullRequest.isSuccess()) {
         return new Error(`failed to create pull request: ${pullRequest.data}`);
     }
