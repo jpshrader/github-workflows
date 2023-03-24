@@ -2,8 +2,8 @@
   repo:
     owner: jpshrader
     slug: github-workflows
-  from_branch: main
-  to_branch: test
+  origin: main
+  destination: test
   labels:
     - bug
   reviewers:
@@ -13,8 +13,8 @@
   repo:
     owner: jpshrader
     slug: github-workflows
-  from_branch: test
-  to_branch: main
+  origin: test
+  destination: main
   title: release workflows
   body: testing
   labels:

@@ -41,16 +41,16 @@ export const getBranch = async (client: Octokit, owner: string, slug: string, br
  * @param {Octokit} client      Github Octokit client.
  * @param {string}  owner       Owner of the repository.
  * @param {string}  slug        Name of the repository.
- * @param {string}  from_branch Branch to merge from.
- * @param {string}  to_branch   Branch to merge into.
+ * @param {string}  origin Branch to merge from.
+ * @param {string}  destination   Branch to merge into.
  * @param {string}  message     Commit message.
  */
-export const mergeBranches = async (client: Octokit, owner: string, slug: string, from_branch: string, to_branch: string, message: string): Promise<GithubApiResponse<any>> => {
+export const mergeBranches = async (client: Octokit, owner: string, slug: string, origin: string, destination: string, message: string): Promise<GithubApiResponse<any>> => {
     return getResponse(async () => await client.request('POST /repos/{owner}/{repo}/merges', {
         owner: owner,
         repo: slug,
-        base: to_branch,
-        head: from_branch,
+        base: destination,
+        head: origin,
         commit_message: message
     }));
 };
@@ -61,13 +61,13 @@ export const mergeBranches = async (client: Octokit, owner: string, slug: string
  * @param {Octokit} client      Github Octokit client.
  * @param {string}  owner       Owner of the repository.
  * @param {string}  slug        Name of the repository.
- * @param {string}  from_branch Branch to compare from.
- * @param {string}  to_branch   Branch to compare into.
+ * @param {string}  origin Branch to compare from.
+ * @param {string}  destination   Branch to compare into.
  */
-export const compareBranches = async (client: Octokit, owner: string, slug: string, from_branch: string, to_branch: string): Promise<GithubApiResponse<any>> => {
+export const compareBranches = async (client: Octokit, owner: string, slug: string, origin: string, destination: string): Promise<GithubApiResponse<any>> => {
     return getResponse(async () => await client.request('GET /repos/{owner}/{repo}/compare/{basehead}', {
         owner: owner,
         repo: slug,
-        basehead: `${to_branch}...${from_branch}`,
+        basehead: `${destination}...${origin}`,
     }));
 };

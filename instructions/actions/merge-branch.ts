@@ -11,55 +11,55 @@ import { argToList } from '../instructions-parser.js';
  */
 export const mergeBranch = async (client: Octokit, ins: any): Promise<Error> => {
     if (!ins.title) {
-        ins.title = `Merge ${ins.from_branch} into ${ins.to_branch} (${ins.repo.owner}/${ins.repo.slug})`;
+        ins.title = `Merge ${ins.origin} into ${ins.destination} (${ins.repo.owner}/${ins.repo.slug})`;
     }
     if (!ins.body) {
         ins.body = `Generated with the [api-workflows](https://github.com/jpshrader/github-workflows) tool.`;
     }
 
-    const fromBranchResponse = await getBranch(client, ins.repo.owner, ins.repo.slug, ins.from_branch);
+    const fromBranchResponse = await getBranch(client, ins.repo.owner, ins.repo.slug, ins.origin);
     if (!fromBranchResponse.isSuccess()) {
-        console.log(`SKIPPING: failed to find branch (${ins.from_branch}): ${fromBranchResponse.data}`);
+        console.log(`SKIPPING: failed to find branch (${ins.origin}): ${fromBranchResponse.data}`);
         return null;
     }
 
-    const toBranchResponse = await getBranch(client, ins.repo.owner, ins.repo.slug, ins.to_branch);
+    const toBranchResponse = await getBranch(client, ins.repo.owner, ins.repo.slug, ins.destination);
     if (!toBranchResponse.isSuccess()) {
-        console.log(`SKIPPING: failed to find branch (${ins.to_branch}): ${toBranchResponse.data}`);
+        console.log(`SKIPPING: failed to find branch (${ins.destination}): ${toBranchResponse.data}`);
         return null;
     }
 
-    const branchComparison = await compareBranches(client, ins.repo.owner, ins.repo.slug, ins.from_branch, ins.to_branch);
+    const branchComparison = await compareBranches(client, ins.repo.owner, ins.repo.slug, ins.origin, ins.destination);
     if (!branchComparison.isSuccess()) {
         return new Error(`failed to compare branches: ${branchComparison.data}`);
     }
 
     if (branchComparison.data.ahead_by === 0 || branchComparison.data.files === 0) {
-        console.log(`SKIPPING: no changes found from ${ins.from_branch} => ${ins.to_branch} (${ins.repo.owner}/${ins.repo.slug})`);
+        console.log(`SKIPPING: no changes found from ${ins.origin} => ${ins.destination} (${ins.repo.owner}/${ins.repo.slug})`);
         return null;
     }
 
     const timeStamp = Math.floor(Date.now() / 1000);
-    const newBranchName = `merge-${ins.from_branch}-into-${ins.to_branch}-${timeStamp}`;
+    const newBranchName = `merge-${ins.origin}-into-${ins.destination}-${timeStamp}`;
     const newBranch = await createBranch(client, ins.repo.owner, ins.repo.slug, toBranchResponse.data.commit.sha, `refs/heads/${newBranchName}`);
     if (!newBranch.isSuccess()) {
         return new Error(`failed to create intermediate branch (${newBranchName}): ${newBranch.data}`);
     }
 
-    const mergeResult = await mergeBranches(client, ins.repo.owner, ins.repo.slug, ins.from_branch, newBranchName, ins.title);
+    const mergeResult = await mergeBranches(client, ins.repo.owner, ins.repo.slug, ins.origin, newBranchName, ins.title);
     if (!mergeResult.isSuccess()) {
         if (mergeResult.statusCode !== 409) {
             return new Error(`failed to merge branches: ${mergeResult.data}`);
         }
-        console.warn(`WARNING: merge conflict detected for ${ins.from_branch} => ${ins.to_branch} (${ins.repo.owner}/${ins.repo.slug})`);
+        console.warn(`WARNING: merge conflict detected for ${ins.origin} => ${ins.destination} (${ins.repo.owner}/${ins.repo.slug})`);
         ins.title  = `[MERGE CONFLICT] ${ins.title}}`
-        ins.body = `Merge conflicts were detected when merging ${ins.from_branch} to ${ins.to_branch} - you will need to resolve these conflicts manually.<br/>
+        ins.body = `Merge conflicts were detected when merging ${ins.origin} to ${ins.destination} - you will need to resolve these conflicts manually.<br/>
         \`git checkout origin/${newBranchName}\`<br/>
-        \`git merge origin/${ins.from_branch}\`<br/>
+        \`git merge origin/${ins.origin}\`<br/>
         ${ins.body}`
     }
 
-    const pullRequest = await createPullRequest(client, ins.repo.owner, ins.repo.slug, ins.title, ins.body, newBranchName, ins.to_branch);
+    const pullRequest = await createPullRequest(client, ins.repo.owner, ins.repo.slug, ins.title, ins.body, newBranchName, ins.destination);
     if (!pullRequest.isSuccess()) {
         return new Error(`failed to create pull request: ${pullRequest.data}`);
     }

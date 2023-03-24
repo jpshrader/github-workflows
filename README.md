@@ -51,8 +51,8 @@ jobs:
                 repo:
                   owner: jpshrader
                   slug: ${{ github.event.inputs.repo }}
-                from_branch: test
-                to_branch: main
+                origin: test
+                destination: main
                 title: release workflows
                 body: testing
                 labels:
@@ -110,7 +110,7 @@ This will of course vary on the types of operations you're performing, but at th
 
 ### Merge branches
 
-The `merge_branch` instruction checks whether there are changes to merge from `from_branch` to `to_branch`. If there are, it creates a new branch (`merge-{from_branch}-to-{to_branch}-{timestamp}`) off of `to_branch`, merges `from_branch` into that new branch, and then opens a pull request targeting `to_branch`. The title, labels, and reviewers of the resulting PR can also be passed to this instruction.
+The `merge_branch` instruction checks whether there are changes to merge from `origin` to `destination`. If there are, it creates a new branch (`merge-{origin}-to-{destination}-{timestamp}`) off of `destination`, merges `origin` into that new branch, and then opens a pull request targeting `destination`. The title, labels, and reviewers of the resulting PR can also be passed to this instruction.
 
 Examples:
 ```
@@ -118,8 +118,8 @@ Examples:
   repo:
     owner:jpshrader
     slug: github-workflows
-  from_branch: main
-  to_branch: test
+  origin: main
+  destination: test
   title: 'merge'
   body: 'test'
   labels:
@@ -132,9 +132,9 @@ Examples:
 | Argument         | Description                                    | Example Value                    | Required | Default Value                        |
 |------------------|------------------------------------------------|----------------------------------|----------|--------------------------------------|
 | `repo`           | object with repo `owner`/`slug` info           | see above example                | `true`   | `N/A`                                |
-| `from_branch`    | name of the origin branch                      | `main`                           | `true`   | `N/A`                                |
-| `to_branch`      | name of the destination branch                 | `main`                           | `true`   | `N/A`                                |
-| `title`          | title of the resulting PR                      | `merge branch`                   | `false`  | `Merge {from_branch} to {to_branch}` |
+| `origin`         | name of the origin branch                      | `main`                           | `true`   | `N/A`                                |
+| `destination`    | name of the destination branch                 | `main`                           | `true`   | `N/A`                                |
+| `title`          | title of the resulting PR                      | `merge branch`                   | `false`  | `Merge {origin} to {destination}`    |
 | `description`    | description of the resulting PR                | `merge branch`                   | `false`  | ` `                                  |
 | `labels`         | a list of label names to add to the PR         | `bug`                            | `false`  | `[]`                                 |
 | `reviewers`      | a list of user logins to request reviews from  | `jpshrader`                      | `false`  | `[]`                                 |
