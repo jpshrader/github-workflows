@@ -11,10 +11,11 @@ inputs:
     type: string
     required: true
 
+env:
+  INSTRUCTIONS: ${{ inputs.instructions }}
+
 runs:
   using: 'composite'
-  env:
-    INSTRUCTIONS: ${{ inputs.instructions }}
   steps:
     - uses: actions/checkout@v3
       with:
