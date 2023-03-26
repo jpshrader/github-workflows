@@ -17,7 +17,7 @@ const argv = await yargs(process.argv.slice(2)).options({
     }
 }).argv;
 
-console.log('processing instructions: ', argv.instructions);
+console.log('processing instructions: ', argv);
 
 const instructions = parseInstructions(argv.instructions);
 const client = getGithubApiClient(argv.accessToken);
