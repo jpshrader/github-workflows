@@ -22,13 +22,13 @@ const ins = process.argv[3];
 
 console.log('processing instructions: ', ins);
 
-const instructions = parseInstructions(ins);
-const client = getGithubApiClient(accessToken);
+// const instructions = parseInstructions(ins);
+// const client = getGithubApiClient(accessToken);
 
-const err = await processInstructions(client, instructions);
-if (err) {
-    console.error('encountered error processing instructions: ', err);
-    process.exit(1);
-}
+// const err = await processInstructions(client, instructions);
+// if (err) {
+//     console.error('encountered error processing instructions: ', err);
+//     process.exit(1);
+// }
 
 console.log('instructions completed successfully');
