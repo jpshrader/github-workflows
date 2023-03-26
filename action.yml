@@ -13,7 +13,6 @@ inputs:
 
 runs:
   using: 'composite'
-  working-
   steps:
     - uses: actions/checkout@v3
       with:
