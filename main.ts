@@ -20,9 +20,9 @@ import { parseInstructions } from './instructions/instructions-parser.js';
 const accessToken = process.argv[2];
 const ins = process.argv[3];
 
-console.log('processing instructions: ', ins);
+//console.log('processing instructions: ', ins);
 
-// const instructions = parseInstructions(ins);
+const instructions = parseInstructions(ins);
 // const client = getGithubApiClient(accessToken);
 
 // const err = await processInstructions(client, instructions);
