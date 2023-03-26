@@ -22,7 +22,9 @@ runs:
       with:
         node-version: 18.x
         cache: 'yarn'
-    - run: yarn install
+    - name: yarn install
+      shell: bash
+      run: yarn install
     - name: Run application
       shell: bash
       run: yarn start --instructions ${{ inputs.instructions }} --access_token ${{ inputs.access_token }}
