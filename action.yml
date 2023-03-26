@@ -33,7 +33,7 @@ runs:
 
     - name: test
       shell: bash
-      run: cat $INSTRUCTIONS
+      run: ls
 
     - name: Run application
       shell: bash
