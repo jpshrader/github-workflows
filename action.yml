@@ -13,22 +13,22 @@ inputs:
 
 runs:
   using: 'composite'
+  working-
   steps:
     - uses: actions/checkout@v3
       with:
         repository: jpshrader/github-workflows
         path: github-workflows
-    - name: Switch Directory
-      shell: bash
-      run: cd github-workflows
     - name: Use Node.js 18.x
       uses: actions/setup-node@v3
-      with:
+      with: 
         node-version: 18.x
         cache: 'yarn'
     - name: yarn install
       shell: bash
+      working-directory: github-workflows
       run: yarn install
     - name: Run application
       shell: bash
+      working-directory: github-workflows
       run: yarn start --instructions ${{ inputs.instructions }} --access_token ${{ inputs.access_token }}
