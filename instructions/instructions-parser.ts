@@ -7,7 +7,6 @@ import { readFileSync, existsSync } from 'fs';
  * @param {string} instructionString string/file path of instructions.
  */
 export const parseInstructions = (instructionString: string): any[] => {
-    console.log('parsing instructions: ', instructionString);
     if (existsSync(instructionString)) {
         instructionString = readFileSync(instructionString, { encoding: 'utf-8' });
     }
