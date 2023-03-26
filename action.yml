@@ -17,6 +17,10 @@ runs:
     - uses: actions/checkout@v3
       with:
         repository: jpshrader/github-workflows
+        path: github-workflows
+    - name: Switch Directory
+      shell: bash
+      run: cd github-workflows
     - name: Use Node.js 18.x
       uses: actions/setup-node@v3
       with:
@@ -25,9 +29,6 @@ runs:
     - name: yarn install
       shell: bash
       run: yarn install
-    - name: jawn
-      shell: bash
-      run: ls
     - name: Run application
       shell: bash
       run: yarn start --instructions ${{ inputs.instructions }} --access_token ${{ inputs.access_token }}
