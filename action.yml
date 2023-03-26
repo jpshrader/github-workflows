@@ -11,9 +11,6 @@ inputs:
     type: string
     required: true
 
-env:
-  INSTRUCTIONS: ${{ inputs.instructions }}
-
 runs:
   using: 'composite'
   steps:
@@ -28,6 +25,11 @@ runs:
     - name: yarn install
       shell: bash
       run: yarn install
+
+    - name: Download a single artifact
+      uses: actions/download-artifact@v3
+      with:
+        name: workflow-instructions
 
     - name: test
       shell: bash
