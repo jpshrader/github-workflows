@@ -27,4 +27,4 @@ runs:
       run: yarn install
     - name: Run application
       shell: bash
-      run: yarn start --instructions '${{ inputs.instructions }}' --access_token ${{ inputs.access_token }}
+      run: yarn start --access_token ${{ inputs.access_token }} --instructions '${{ inputs.instructions }}'
