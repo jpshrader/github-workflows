@@ -13,6 +13,8 @@ inputs:
 
 runs:
   using: 'composite'
+  env:
+    INSTRUCTIONS: ${{ inputs.instructions }}
   steps:
     - uses: actions/checkout@v3
       with:
@@ -28,7 +30,7 @@ runs:
 
     - name: test
       shell: bash
-      run: ls
+      run: cat $INSTRUCTIONS
 
     - name: Run application
       shell: bash
