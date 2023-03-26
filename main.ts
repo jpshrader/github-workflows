@@ -1,26 +1,27 @@
-import yargs from 'yargs';
+//import yargs from 'yargs';
 
 import { getGithubApiClient } from './client/github-api-client.js';
 import { processInstructions } from './instructions/instruction-processor.js';
 import { parseInstructions } from './instructions/instructions-parser.js';
 
-const argv = await yargs(process.argv.slice(2)).options({
-    instructions: {
-        alias: 'instructions',
-        type: 'string',
-        demandOption: true
-    },
-    accessToken: {
-        alias: 'access_token',
-        type: 'string',
-        demandOption: true
-    }
-}).argv;
+// const argv = await yargs(process.argv.slice(2)).options({
+//     instructions: {
+//         alias: 'instructions',
+//         type: 'string',
+//         demandOption: true
+//     },
+//     accessToken: {
+//         alias: 'access_token',
+//         type: 'string',
+//         demandOption: true
+//     }
+// }).argv;
 
-console.log('processing instructions: ', process.argv.slice(2));
+const accessToken = process.argv[2];
+const ins = process.argv[3];
 
-const instructions = parseInstructions(argv.instructions);
-const client = getGithubApiClient(argv.accessToken);
+const instructions = parseInstructions(ins);
+const client = getGithubApiClient(accessToken);
 
 const err = await processInstructions(client, instructions);
 if (err) {
