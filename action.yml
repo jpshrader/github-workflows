@@ -25,8 +25,9 @@ runs:
     - name: yarn install
       shell: bash
       run: yarn install
-        pwd
-        ls
+    - name: jawn
+      shell: bash
+      run: ls
     - name: Run application
       shell: bash
       run: yarn start --instructions ${{ inputs.instructions }} --access_token ${{ inputs.access_token }}
