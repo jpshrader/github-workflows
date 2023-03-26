@@ -3,7 +3,7 @@ description: 'Run a set of GitHub api workflow instructions'
 author: jpshrader
 inputs:
   instructions:
-    description: 'String/Path of Github Workflow instructions'
+    description: 'Path to a Github Workflow instructions file'
     type: string
     required: true
   access_token:
@@ -27,4 +27,4 @@ runs:
       run: yarn install
     - name: Run application
       shell: bash
-      run: yarn start ${{ inputs.access_token }} ${{ inputs.instructions }}
+      run: yarn start --instructions ${{ inputs.instructions }} --access_token ${{ inputs.access_token }}
