@@ -3,8 +3,7 @@ description: 'Run a set of GitHub api workflow instructions'
 author: jpshrader
 inputs:
   instructions:
-    description: 'Path to a Github workflow instruction yaml file'
-    type: string
+    description: 'Path or Literal Github workflow instruction yaml file'
     required: true
   access_token:
     description: 'GitHub Api Access Token'
