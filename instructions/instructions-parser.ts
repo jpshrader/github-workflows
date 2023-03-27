@@ -10,7 +10,6 @@ export const parseInstructions = (instructionString: string): any[] => {
     if (existsSync(instructionString)) {
         instructionString = readFileSync(instructionString, { encoding: 'utf-8' });
     }
-    instructionString = readFileSync(instructionString, { encoding: 'utf-8' });
 
     return load(instructionString) as any[];
 };
