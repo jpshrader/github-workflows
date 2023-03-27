@@ -2,8 +2,12 @@ name: 'GitHub Workflows'
 description: 'Run a set of GitHub api workflow instructions'
 author: jpshrader
 inputs:
-  instructions:
-    description: 'Path to a Github Workflow instructions file'
+  artifact_name:
+    description: 'Name of the file artifact in stored in Github'
+    type: string
+    required: true
+  file_name:
+    description: 'Name of the file contained in the Github Artifact'
     type: string
     required: true
   access_token:
@@ -31,8 +35,8 @@ runs:
     - name: Download instructions file
       uses: actions/download-artifact@v3
       with:
-        name: workflow-instructions
+        name: ${{ inputs.artifact_name }}
 
     - name: Run application
       shell: bash
-      run: yarn start --instructions ${{ inputs.instructions }} --access_token ${{ inputs.access_token }}
+      run: yarn start --instructions ${{ inputs.file_name }} --access_token ${{ inputs.access_token }}
