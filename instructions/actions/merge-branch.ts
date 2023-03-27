@@ -19,19 +19,19 @@ export const mergeBranch = async (client: Octokit, ins: any): Promise<Error> => 
 
     const fromBranchResponse = await getBranch(client, ins.repo.owner, ins.repo.slug, ins.origin);
     if (!fromBranchResponse.isSuccess()) {
-        console.log(`SKIPPING: failed to find branch (${ins.origin}): ${fromBranchResponse.data}`);
+        console.log(`SKIPPING: failed to find branch (${ins.origin}): ${fromBranchResponse.data.message}`);
         return null;
     }
 
     const toBranchResponse = await getBranch(client, ins.repo.owner, ins.repo.slug, ins.destination);
     if (!toBranchResponse.isSuccess()) {
-        console.log(`SKIPPING: failed to find branch (${ins.destination}): ${toBranchResponse.data}`);
+        console.log(`SKIPPING: failed to find branch (${ins.destination}): ${toBranchResponse.data.message}`);
         return null;
     }
 
     const branchComparison = await compareBranches(client, ins.repo.owner, ins.repo.slug, ins.origin, ins.destination);
     if (!branchComparison.isSuccess()) {
-        return new Error(`failed to compare branches: ${branchComparison.data}`);
+        return new Error(`failed to compare branches: ${branchComparison.data.message}`);
     }
 
     if (branchComparison.data.ahead_by === 0 || branchComparison.data.files === 0) {
@@ -43,13 +43,13 @@ export const mergeBranch = async (client: Octokit, ins: any): Promise<Error> => 
     const newBranchName = `merge-${ins.origin}-into-${ins.destination}-${timeStamp}`;
     const newBranch = await createBranch(client, ins.repo.owner, ins.repo.slug, toBranchResponse.data.commit.sha, `refs/heads/${newBranchName}`);
     if (!newBranch.isSuccess()) {
-        return new Error(`failed to create intermediate branch (${newBranchName}): ${newBranch.data}`);
+        return new Error(`failed to create intermediate branch (${newBranchName}): ${newBranch.data.message}`);
     }
 
     const mergeResult = await mergeBranches(client, ins.repo.owner, ins.repo.slug, ins.origin, newBranchName, ins.title);
     if (!mergeResult.isSuccess()) {
         if (mergeResult.statusCode !== 409) {
-            return new Error(`failed to merge branches: ${mergeResult.data}`);
+            return new Error(`failed to merge branches: ${mergeResult.data.message}`);
         }
         console.warn(`WARNING: merge conflict detected for ${ins.origin} => ${ins.destination} (${ins.repo.owner}/${ins.repo.slug})`);
         ins.title = `[MERGE CONFLICT] ${ins.title}}`
@@ -61,7 +61,7 @@ export const mergeBranch = async (client: Octokit, ins: any): Promise<Error> => 
 
     const pullRequest = await createPullRequest(client, ins.repo.owner, ins.repo.slug, ins.title, ins.body, newBranchName, ins.destination);
     if (!pullRequest.isSuccess()) {
-        return new Error(`failed to create pull request: ${pullRequest.data}`);
+        return new Error(`failed to create pull request: ${pullRequest.data.message}`);
     }
 
     const prNum = pullRequest.data.number;
@@ -78,7 +78,7 @@ export const mergeBranch = async (client: Octokit, ins: any): Promise<Error> => 
         const teamReviewers = argToList(ins.team_reviewers);
         const reviewerResult = await addReviewers(client, ins.repo.owner, ins.repo.slug, prNum, reviewers, teamReviewers);
         if (!reviewerResult.isSuccess()) {
-            return new Error(`failed to add reviewers: ${reviewerResult.data}`);
+            return new Error(`failed to add reviewers: ${reviewerResult.data.message}`);
         }
     }
 
@@ -86,7 +86,7 @@ export const mergeBranch = async (client: Octokit, ins: any): Promise<Error> => 
         const labels = argToList(ins.labels);
         const labelResult = await addLabels(client, ins.repo.owner, ins.repo.slug, prNum, labels);
         if (!labelResult.isSuccess()) {
-            return new Error(`failed to add labels: ${labelResult.data}`);
+            return new Error(`failed to add labels: ${labelResult.data.message}`);
         }
     }
 

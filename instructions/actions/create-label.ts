@@ -17,7 +17,7 @@ export const createLabel = async (client: Octokit, ins: any): Promise<Error> => 
 
         const newLabel = await createLbl(client, repo.owner, repo.slug, ins.name, ins.description, ins.color);
         if (!newLabel.isSuccess()) {
-            return new Error(`failed to create label: '${newLabel.data}' on ${repo.owner}/${repo.slug}`);
+            return new Error(`failed to create label: '${newLabel.data}' on ${repo.owner}/${repo.slug} - ${newLabel.data.message}`);
         }
         console.log(`SUCCESS: created label ${ins.name} on ${repo.owner}/${repo.slug}`);
     }
