@@ -17,23 +17,21 @@ runs:
     - uses: actions/checkout@v3
       with:
         repository: jpshrader/github-workflows
+
     - name: Use Node.js 18.x
       uses: actions/setup-node@v3
       with: 
         node-version: 18.x
         cache: 'yarn'
+
     - name: yarn install
       shell: bash
       run: yarn install
 
-    - name: Download a single artifact
+    - name: Download instructions file
       uses: actions/download-artifact@v3
       with:
         name: workflow-instructions
-
-    - name: test
-      shell: bash
-      run: ls
 
     - name: Run application
       shell: bash
