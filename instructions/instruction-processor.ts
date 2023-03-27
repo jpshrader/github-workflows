@@ -14,8 +14,6 @@ export const processInstructions = async (client: Octokit, instructions: any[]):
             return err;
         }
 
-        console.log('instruction: ', instruction);
-
         err = await processInstruction(client, instruction);
     }
 
