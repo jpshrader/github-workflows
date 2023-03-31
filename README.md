@@ -100,7 +100,7 @@ jobs:
 
 This utility uses [GitHub Personal Access Tokens](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token) to authenticate with the api. As a consequence, all actions performed through this utility will be 'done by' the owner of the token.
 
-In your consuming consuming workflow, you may accept the [access token as a parameter](https://github.com/jpshrader/github-api-workflow-examples/blob/main/.github/workflows/github-utility.yml#L14-L17) or store it as a [secret](https://docs.github.com/en/actions/security-guides/encrypted-secrets#about-encrypted-secrets).
+In your consuming consuming workflow, you may accept the access token as a parameter or store it as a [secret](https://docs.github.com/en/actions/security-guides/encrypted-secrets#about-encrypted-secrets).
 
 #### Token permissions
 

@@ -30,7 +30,7 @@ async function processInstruction(client: Octokit, instruction: any) {
             err = await createLabel(client, instruction);
             break;
         case DRY_RUN:
-            err = await dryRun(instruction);
+            err = await dryRun(client, instruction);
             break;
         default:
             console.error(`unknown action: ${instruction.action}`);

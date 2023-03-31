@@ -14,7 +14,7 @@ export const mergeBranch = async (client: Octokit, ins: any): Promise<Error> => 
         ins.title = `Merge ${ins.origin} into ${ins.destination} (${ins.repo.owner}/${ins.repo.slug})`;
     }
     if (!ins.body) {
-        ins.body = `Generated with the [api-workflows](https://github.com/jpshrader/github-workflows) tool.`;
+        ins.body = `Generated with the [github-workflows](https://github.com/jpshrader/github-workflows) tool.`;
     }
 
     const fromBranchResponse = await getBranch(client, ins.repo.owner, ins.repo.slug, ins.origin);
@@ -34,7 +34,8 @@ export const mergeBranch = async (client: Octokit, ins: any): Promise<Error> => 
         return new Error(`failed to compare branches: ${branchComparison.data.message}`);
     }
 
-    if (branchComparison.data.ahead_by === 0 || branchComparison.data.files === 0) {
+    const comparison = branchComparison.data;
+    if (comparison.ahead_by === 0 || comparison.files.length === 0) {
         console.log(`SKIPPING: no changes found from ${ins.origin} => ${ins.destination} (${ins.repo.owner}/${ins.repo.slug})`);
         return null;
     }

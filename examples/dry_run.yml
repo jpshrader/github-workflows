@@ -1,3 +1,5 @@
+# PRINT INFO
+
 - action: dry_run
   labels: 'one,two'
   reviewers: 'three,four'
@@ -13,3 +15,12 @@
   team_reviewers:
     - people
     - engineers
+
+# COMPARE BRANCHES
+
+- action: dry_run
+  repo:
+    owner: jpshrader
+    slug: github-workflows
+  origin: main
+  destination: main

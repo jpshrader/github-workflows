@@ -1,13 +1,36 @@
+import { Octokit } from 'octokit';
 import { argToList } from '../instructions-parser.js';
+import { compareBranches } from '../../client/branch-service.js';
 
 /**
  * Processes a `dry_run` instruction.
  *
- * @param {any} ins A `dry_run` instruction set.
+ * @param {Octokit} client  GitHub api client.
+ * @param {any}     ins     A `dry_run` instruction set.
  */
-export const dryRun = async (ins: any): Promise<Error> => {
+export const dryRun = async (client: Octokit, ins: any): Promise<Error> => {
     console.log('received instructions: ', ins);
 
+    printInfo(ins);
+    getBranchComparison(client, ins);
+
+    return null;
+};
+
+const getBranchComparison = async (client: Octokit, ins: any) => {
+    if (!ins.repo) {
+        return;
+    }
+
+    const branchComparison = await compareBranches(client, ins.repo.owner, ins.repo.slug, ins.origin, ins.destination);
+    if (!branchComparison.isSuccess()) {
+        console.log(`failed to compare branches: ${branchComparison.data.message}`);
+    }
+
+    console.log('branch comparison: ', branchComparison.data);
+};
+
+const printInfo = (ins: any) => {
     if (ins.reviewers) {
         const reviewers = [];
         const reviewerList = argToList(ins.reviewers);
@@ -33,6 +56,4 @@ export const dryRun = async (ins: any): Promise<Error> => {
 
         console.log('labels: ', labels);
     }
-
-    return null;
 };
