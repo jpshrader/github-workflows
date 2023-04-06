@@ -24,12 +24,13 @@ export const getCurrentUserRepos = async (client: Octokit): Promise<GithubApiRes
  * @returns {Promise<GithubApiResponse<any>>}   All repositories for the currently authenticated user.
  */
 export const createOrUpdateFile = async (client: Octokit, owner: string, slug: string, branch: string, filePath: string, content: string, message: string): Promise<GithubApiResponse<any>> => {
+    const encodedContent = Buffer.from(content, 'base64').toString('base64');
     return getResponse(async () => await client.request('PUT /repos/{owner}/{repo}/contents/{path}', {
         owner: owner,
         repo: slug,
         path: filePath,
         message: message,
-        content: content,
+        content: encodedContent,
         branch: branch,
     }));
 };
