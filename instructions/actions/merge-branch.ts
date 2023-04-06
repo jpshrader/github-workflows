@@ -56,17 +56,16 @@ export const mergeBranch = async (client: Octokit, ins: any): Promise<Error> => 
         }
         console.warn(`WARNING: merge conflict detected for ${ins.origin} => ${ins.destination} (${ins.repo.owner}/${ins.repo.slug})`);
 
-        const placeholderFile = `This is a temporary placeholder file to enable PR creation. Merge in ${ins.origin}, resolve the conflicts and remove this file before merging.`
-        const createFileResult = await createOrUpdateFile(client, ins.repo.owner, ins.repo.slug, newBranchName, `${newBranchName}.txt`, placeholderFile, 'add placeholder file to resolve merge conflict');
+        const createFileResult = await createOrUpdateFile(client, ins.repo.owner, ins.repo.slug, newBranchName, `${newBranchName}.txt`, '', 'add placeholder file to resolve merge conflict');
         if (!createFileResult.isSuccess()) {
             return new Error(`failed to create placeholder file: ${createFileResult.data.message}`);
         }
 
-        ins.title = `[MERGE CONFLICT] ${ins.title}}`
+        ins.title = `[MERGE CONFLICT] ${ins.title}`
         ins.body = `Merge conflicts were detected when merging ${ins.origin} to ${ins.destination} - you will need to resolve these conflicts manually.<br/>
         \`git checkout origin/${newBranchName}\`<br/>
         \`git merge origin/${ins.origin}\`<br/>
-        Remove the \`placeholder.txt\` file<br/>
+        Remove the \`${newBranchName}.txt\` file<br/>
         ${ins.body}`
         isDraft = true;
     }
