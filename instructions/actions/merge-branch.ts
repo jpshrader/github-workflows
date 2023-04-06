@@ -2,6 +2,7 @@ import { Octokit } from 'octokit';
 import { compareBranches, createBranch, getBranch, mergeBranches } from '../../client/branch-service.js';
 import { addLabels, addReviewers, createPullRequest } from '../../client/pull-request-service.js';
 import { argToList } from '../instructions-parser.js';
+import { createOrUpdateFile } from '../../client/repo-service.js';
 
 /**
  * Processes a `merge_branch` instruction.
@@ -47,20 +48,30 @@ export const mergeBranch = async (client: Octokit, ins: any): Promise<Error> => 
         return new Error(`failed to create intermediate branch (${newBranchName}): ${newBranch.data.message}`);
     }
 
+    var isDraft = false;
     const mergeResult = await mergeBranches(client, ins.repo.owner, ins.repo.slug, ins.origin, newBranchName, ins.title);
     if (!mergeResult.isSuccess()) {
         if (mergeResult.statusCode !== 409) {
             return new Error(`failed to merge branches: ${mergeResult.data.message}`);
         }
         console.warn(`WARNING: merge conflict detected for ${ins.origin} => ${ins.destination} (${ins.repo.owner}/${ins.repo.slug})`);
+
+        const placeholderFile = `This is a temporary placeholder file to enable PR creation. Merge in ${ins.origin}, resolve the conflicts and remove this file before merging.`
+        const createFileResult = await createOrUpdateFile(client, ins.repo.owner, ins.repo.slug, newBranchName, `${newBranchName}.txt`, placeholderFile, 'add placeholder file to resolve merge conflict');
+        if (!createFileResult.isSuccess()) {
+            return new Error(`failed to create placeholder file: ${createFileResult.data.message}`);
+        }
+
         ins.title = `[MERGE CONFLICT] ${ins.title}}`
         ins.body = `Merge conflicts were detected when merging ${ins.origin} to ${ins.destination} - you will need to resolve these conflicts manually.<br/>
         \`git checkout origin/${newBranchName}\`<br/>
         \`git merge origin/${ins.origin}\`<br/>
+        Remove the \`placeholder.txt\` file<br/>
         ${ins.body}`
+        isDraft = true;
     }
 
-    const pullRequest = await createPullRequest(client, ins.repo.owner, ins.repo.slug, ins.title, ins.body, newBranchName, ins.destination);
+    const pullRequest = await createPullRequest(client, ins.repo.owner, ins.repo.slug, ins.title, ins.body, newBranchName, ins.destination, isDraft);
     if (!pullRequest.isSuccess()) {
         return new Error(`failed to create pull request: ${pullRequest.data.message}`);
     }

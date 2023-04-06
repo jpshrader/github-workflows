@@ -11,8 +11,9 @@ import { getResponse, GithubApiResponse } from './github-api-client.js';
  * @param {string}  body        Description of the pull request.
  * @param {string}  fromBranch  The origin branch to merge from.
  * @param {string}  toBranch    The destination branch to merge into.
+ * @param {boolean} isDraft     Whether the PR is opened as a 'Draft'. Defaults to `false`.
  */
-export const createPullRequest = async (client: Octokit, owner: string, slug: string, title: string, body: string, fromBranch: string, toBranch: string): Promise<GithubApiResponse<any>> => {
+export const createPullRequest = async (client: Octokit, owner: string, slug: string, title: string, body: string, fromBranch: string, toBranch: string, isDraft: boolean = false): Promise<GithubApiResponse<any>> => {
     return getResponse(async () => await client.request('POST /repos/{owner}/{repo}/pulls', {
         owner: owner,
         repo: slug,
@@ -20,6 +21,7 @@ export const createPullRequest = async (client: Octokit, owner: string, slug: st
         body: body,
         head: fromBranch,
         base: toBranch,
+        draft: isDraft,
     }));
 };
 
