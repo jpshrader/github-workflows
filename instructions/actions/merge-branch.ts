@@ -62,7 +62,7 @@ export const mergeBranch = async (client: Octokit, ins: any): Promise<Error> => 
         }
 
         ins.title = `[MERGE CONFLICT] ${ins.title}`
-        ins.body = `Merge conflicts were detected when merging ${ins.origin} to ${ins.destination} - you will need to resolve these conflicts manually.<br/>
+        ins.body = `Merge conflicts were detected when merging \`${ins.origin}\` to \`${ins.destination}\` - you will need to resolve these conflicts manually.<br/>
         \`git checkout origin/${newBranchName}\`<br/>
         \`git merge origin/${ins.origin}\`<br/>
         Remove the \`${newBranchName}.txt\` file<br/>
