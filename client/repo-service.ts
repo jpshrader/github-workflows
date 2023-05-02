@@ -12,7 +12,7 @@ export const getCurrentUserRepos = async (client: Octokit): Promise<GithubApiRes
 };
 
 /**
- * Returns all repositories for the authenticated user.
+ * Creates a file at a given path.
  *
  * @param   {Octokit} client                    Github Octokit client.
  * @param   {string}  owner                     Owner of the repository.
@@ -31,6 +31,29 @@ export const createOrUpdateFile = async (client: Octokit, owner: string, slug: s
         path: filePath,
         message: message,
         content: encodedContent,
+        branch: branch,
+    }));
+};
+
+/**
+ * Deletes a file at a given path.
+ *
+ * @param   {Octokit} client                    Github Octokit client.
+ * @param   {string}  owner                     Owner of the repository.
+ * @param   {string}  slug                      Name of the repository.
+ * @param   {string}  branch                    Branch name to add/update file.
+ * @param   {string}  sha                       The blob SHA of the file being deleted.
+ * @param   {string}  filePath                  Path to add the file.
+ * @param   {string}  message                   Commit message.
+ * @returns {Promise<GithubApiResponse<any>>}   All repositories for the currently authenticated user.
+ */
+export const deleteFile = async (client: Octokit, owner: string, slug: string, branch: string, filePath: string, sha: string, message: string): Promise<GithubApiResponse<any>> => {
+    return getResponse(async () => await client.request('DELETE /repos/{owner}/{repo}/contents/{path}', {
+        owner: owner,
+        repo: slug,
+        path: filePath,
+        message: message,
+        sha: sha,
         branch: branch,
     }));
 };
