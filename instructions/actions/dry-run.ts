@@ -11,8 +11,13 @@ import { compareBranches } from '../../client/branch-service.js';
 export const dryRun = async (client: Octokit, ins: any): Promise<Error> => {
     console.log('received instructions: ', ins);
 
-    printInfo(ins);
-    getBranchComparison(client, ins);
+    if (ins.type === 'info') {
+        printInfo(ins);
+    }
+
+    if (ins.type === 'compare') {
+        getBranchComparison(client, ins);
+    }
 
     return null;
 };

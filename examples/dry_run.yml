@@ -1,11 +1,13 @@
 # PRINT INFO
 
 - action: dry_run
+  type: info
   labels: 'one,two'
   reviewers: 'three,four'
   team_reviewers: 'people,engineers'
 
 - action: dry_run
+  type: info
   labels:
     - five
     - six
@@ -19,6 +21,7 @@
 # COMPARE BRANCHES
 
 - action: dry_run
+  type: compare
   repo:
     owner: jpshrader
     slug: github-workflows

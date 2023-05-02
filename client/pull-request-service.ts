@@ -31,7 +31,7 @@ export const createPullRequest = async (client: Octokit, owner: string, slug: st
  * @param {Octokit}  client             Github Octokit client.
  * @param {string}   owner              Owner of the repository.
  * @param {string}   slug               Name of the repository.
- * @param {string}   pullRequestNumber  Number Id of the pull request.
+ * @param {number}   pullRequestNumber  Number Id of the pull request.
  * @param {string[]} reviewers          List of usernames to add as reviewers.
  * @param {string[]} teamReviewers      List of teams to add as reviewers.
  */
@@ -41,8 +41,8 @@ export const addReviewers = async (client: Octokit, owner: string, slug: string,
         repo: slug,
         pull_number: pullRequestNumber,
         reviewers: reviewers,
-        team_reviewers: teamReviewers,
-    }));
+        team_reviewers: teamReviewers
+    } as any));
 };
 
 /**
