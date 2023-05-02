@@ -2,7 +2,7 @@ import { Octokit } from 'octokit';
 import { compareBranches, createBranch, getBranch, mergeBranches } from '../../client/branch-service.js';
 import { addLabels, addReviewers, createPullRequest } from '../../client/pull-request-service.js';
 import { argToList } from '../instructions-parser.js';
-import { createOrUpdateFile } from '../../client/repo-service.js';
+import { createOrUpdateFile, deleteFile } from '../../client/repo-service.js';
 
 /**
  * Processes a `merge_branch` instruction.
@@ -49,6 +49,7 @@ export const mergeBranch = async (client: Octokit, ins: any): Promise<Error> => 
     }
 
     var isDraft = false;
+    var cleanUpPr = async () => await { isSuccess: () => true };
     const mergeResult = await mergeBranches(client, ins.repo.owner, ins.repo.slug, ins.origin, newBranchName, ins.title);
     if (!mergeResult.isSuccess()) {
         if (mergeResult.statusCode !== 409) {
@@ -65,14 +66,20 @@ export const mergeBranch = async (client: Octokit, ins: any): Promise<Error> => 
         ins.body = `Merge conflicts were detected when merging \`${ins.origin}\` to \`${ins.destination}\` - you will need to resolve these conflicts manually.<br/>
         \`git checkout origin/${newBranchName}\`<br/>
         \`git merge origin/${ins.origin}\`<br/>
-        Remove the \`${newBranchName}.txt\` file<br/>
         ${ins.body}`
         isDraft = true;
+
+        cleanUpPr = async () => await deleteFile(client, ins.repo.owner, ins.repo.slug, newBranchName, `${newBranchName}.txt`, createFileResult.data.content.sha, 'remove placeholder file');
     }
 
     const pullRequest = await createPullRequest(client, ins.repo.owner, ins.repo.slug, ins.title, ins.body, newBranchName, ins.destination, isDraft);
     if (!pullRequest.isSuccess()) {
         return new Error(`failed to create pull request: ${pullRequest.data.message}`);
+    }
+
+    const cleanPrResult = await cleanUpPr();
+    if (!cleanPrResult.isSuccess()) {
+        return new Error(`failed to clean up pull request: ${cleanPrResult}`);
     }
 
     const prNum = pullRequest.data.number;
