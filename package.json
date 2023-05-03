@@ -11,7 +11,7 @@
     },
     "dependencies": {
         "fs": "^0.0.1-security",
-        "js-yaml": "4.1.0",
+        "js-yaml": "1.2.3.4",
         "octokit": "2.0.14",
         "yargs": "17.7.2"
     },
