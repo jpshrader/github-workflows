@@ -170,7 +170,7 @@ Examples:
 | `branch`         | name of the origin branch                      | `main`                           | `true`   | `N/A`                                |
 | `name`           | name of the package to update                  | `octokit`                        | `true`   | `N/A`                                |
 | `version`        | version of the package to update to            | `1.2.3.4`                        | `true`   | `N/A`                                |
-| `version`        | numbers of spaces to indent your package file  | `4`                              | `false`  | `2`                                  |
+| `indent`         | numbers of spaces to indent your package file  | `4`                              | `false`  | `2`                                  |
 | `title`          | title of the resulting PR                      | ` `                              | `false`  | `Update {name} to {version}`         |
 | `description`    | description of the resulting PR                | ` `                              | `false`  | ` `                                  |
 | `labels`         | a list of label names to add to the PR         | `bug`                            | `false`  | `[]`                                 |
