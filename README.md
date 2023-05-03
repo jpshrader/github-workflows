@@ -140,6 +140,43 @@ Examples:
 | `reviewers`      | a list of user logins to request reviews from  | `jpshrader`                      | `false`  | `[]`                                 |
 | `team_reviewers` | a list of teams to request reviews from        | `dev_ops`                        | `false`  | `[]`                                 |
 
+### Update package
+
+The `update_package` instruction updates a specific npm package to a specific version on a given branch. It creates a new branch (`update-{name}-{timeStamp}`) off of `branch`, fetches the file at the given `path` and updates the package (`name`). It then commits this change to the aforementioned branch and opens a PR into the original branch. The title, labels, and reviewers of the resulting PR can also be passed to this instruction.
+
+Examples:
+```
+- action: update_package
+  repo:
+    owner:jpshrader
+    slug: github-workflows
+  branch: main
+  path: package.json
+  name: js-yaml
+  version: 1.2.3.4
+  indent: 4
+  title: 'merge'
+  body: 'test'
+  labels:
+    - bug
+    - documentation
+  reviewers:
+    - jpshrader
+```
+
+| Argument         | Description                                    | Example Value                    | Required | Default Value                        |
+|------------------|------------------------------------------------|----------------------------------|----------|--------------------------------------|
+| `repo`           | object with repo `owner`/`slug` info           | see above example                | `true`   | `N/A`                                |
+| `branch`         | name of the origin branch                      | `main`                           | `true`   | `N/A`                                |
+| `name`           | name of the package to update                  | `octokit`                        | `true`   | `N/A`                                |
+| `version`        | version of the package to update to            | `1.2.3.4`                        | `true`   | `N/A`                                |
+| `version`        | numbers of spaces to indent your package file  | `4`                              | `false`  | `2`                                  |
+| `title`          | title of the resulting PR                      | ` `                              | `false`  | `Update {name} to {version}`         |
+| `description`    | description of the resulting PR                | ` `                              | `false`  | ` `                                  |
+| `labels`         | a list of label names to add to the PR         | `bug`                            | `false`  | `[]`                                 |
+| `reviewers`      | a list of user logins to request reviews from  | `jpshrader`                      | `false`  | `[]`                                 |
+| `team_reviewers` | a list of teams to request reviews from        | `dev_ops`                        | `false`  | `[]`                                 |
+
 ### Create Label
 
 The `create_label` instruction creates a given label across a list of repos.

@@ -12,6 +12,25 @@ export const getCurrentUserRepos = async (client: Octokit): Promise<GithubApiRes
 };
 
 /**
+ * Gets a file at a given path.
+ *
+ * @param   {Octokit} client                    Github Octokit client.
+ * @param   {string}  owner                     Owner of the repository.
+ * @param   {string}  slug                      Name of the repository.
+ * @param   {string}  branch                    Branch name to fetch file.
+ * @param   {string}  filePath                  Path to find the file.
+ * @returns {Promise<GithubApiResponse<any>>}
+ */
+export const getFile = async (client: Octokit, owner: string, slug: string, branch: string, filePath: string): Promise<GithubApiResponse<any>> => {
+    return getResponse(async () => await client.request('GET /repos/{owner}/{repo}/contents/{path}', {
+        owner: owner,
+        repo: slug,
+        path: filePath,
+        ref: branch,
+    }));
+};
+
+/**
  * Creates a file at a given path.
  *
  * @param   {Octokit} client                    Github Octokit client.
@@ -21,10 +40,11 @@ export const getCurrentUserRepos = async (client: Octokit): Promise<GithubApiRes
  * @param   {string}  filePath                  Path to add the file.
  * @param   {string}  content                   Contents of the file.
  * @param   {string}  message                   Commit message.
- * @returns {Promise<GithubApiResponse<any>>}   All repositories for the currently authenticated user.
+ * @param   {string}  sha                       Sha of the blob being replaced.
+ * @returns {Promise<GithubApiResponse<any>>}
  */
-export const createOrUpdateFile = async (client: Octokit, owner: string, slug: string, branch: string, filePath: string, content: string, message: string): Promise<GithubApiResponse<any>> => {
-    const encodedContent = Buffer.from(content, 'base64').toString('base64');
+export const createOrUpdateFile = async (client: Octokit, owner: string, slug: string, branch: string, filePath: string, content: string, message: string, sha: string): Promise<GithubApiResponse<any>> => {
+    const encodedContent = Buffer.from(content).toString('base64');
     return getResponse(async () => await client.request('PUT /repos/{owner}/{repo}/contents/{path}', {
         owner: owner,
         repo: slug,
@@ -32,6 +52,7 @@ export const createOrUpdateFile = async (client: Octokit, owner: string, slug: s
         message: message,
         content: encodedContent,
         branch: branch,
+        sha: sha,
     }));
 };
 
@@ -45,7 +66,7 @@ export const createOrUpdateFile = async (client: Octokit, owner: string, slug: s
  * @param   {string}  sha                       The blob SHA of the file being deleted.
  * @param   {string}  filePath                  Path to add the file.
  * @param   {string}  message                   Commit message.
- * @returns {Promise<GithubApiResponse<any>>}   All repositories for the currently authenticated user.
+ * @returns {Promise<GithubApiResponse<any>>}
  */
 export const deleteFile = async (client: Octokit, owner: string, slug: string, branch: string, filePath: string, sha: string, message: string): Promise<GithubApiResponse<any>> => {
     return getResponse(async () => await client.request('DELETE /repos/{owner}/{repo}/contents/{path}', {
