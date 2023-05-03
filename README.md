@@ -155,7 +155,7 @@ Examples:
   name: js-yaml
   version: 1.2.3.4
   indent: 4
-  title: 'merge'
+  title: 'update'
   body: 'test'
   labels:
     - bug
