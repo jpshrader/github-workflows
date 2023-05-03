@@ -12,7 +12,7 @@ import { createOrUpdateFile, getFile } from '../../client/repo-service.js';
  */
 export const updatePackage = async (client: Octokit, ins: any): Promise<Error> => {
     if (!ins.title) {
-        ins.title = `Update ${ins.name} to ${ins.version} (${ins.repo.owner}/${ins.repo.slug})`;
+        ins.title = `Update \`${ins.name}\` to \`${ins.version}\` (${ins.repo.owner}/${ins.repo.slug})`;
     }
     if (!ins.body) {
         ins.body = `Generated with the [github-workflows](https://github.com/jpshrader/github-workflows) tool.`;

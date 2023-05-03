@@ -11,7 +11,6 @@ const DRY_RUN        = 'dry_run';
 
 export const processInstructions = async (client: Octokit, instructions: any[]): Promise<Error> => {
     var err: Error = null;
-    console.log('processing instructions: ', instructions);
     for (const instruction of instructions) {
         if (err) {
             return err;
@@ -25,7 +24,6 @@ export const processInstructions = async (client: Octokit, instructions: any[]):
 
 async function processInstruction(client: Octokit, instruction: any) {
     var err: Error = null;
-    console.log('processing instruction: ', instruction);
     switch (instruction.action) {
         case MERGE_BRANCH:
             err = await mergeBranch(client, instruction);
