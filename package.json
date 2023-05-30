@@ -7,16 +7,16 @@
     "type": "module",
     "private": true,
     "scripts": {
-        "start": "ts-node main.ts"
+        "start": "tsc && node dist/main.js"
     },
     "dependencies": {
         "fs": "^0.0.1-security",
         "js-yaml": "4.1.0",
-        "octokit": "2.0.14",
+        "octokit": "2.0.19",
         "yargs": "17.7.2"
     },
     "devDependencies": {
-        "@octokit/types": "9.2.0",
+        "@octokit/types": "9.2.3",
         "@types/js-yaml": "4.0.5",
         "@types/yargs": "17.0.24",
         "ts-node": "10.9.1",
