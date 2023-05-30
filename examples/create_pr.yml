@@ -1,0 +1,12 @@
+- action: create_pr
+  repo:
+    owner: jpshrader
+    slug: github-workflows
+  origin: test
+  destination: main
+  title: create pull request action
+  body: testing
+  labels:
+    - bug
+  reviewers:
+    - jpshrader

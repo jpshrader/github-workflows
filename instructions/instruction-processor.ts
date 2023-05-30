@@ -5,18 +5,12 @@ import { mergeBranch } from './actions/merge-branch.js';
 import { updatePackage } from './actions/update-package.js';
 import { createPr } from './actions/create-pr.js';
 
-const MERGE_BRANCH   = 'merge_branch';
-const CREATE_LABEL   = 'create_label';
-const UPDATE_PACKAGE = 'update_package';
-const CREATE_PR      = 'create_pr'
-const DRY_RUN        = 'dry_run';
-
 const instructionHandler = Array<(client: Octokit, ins: any) => Promise<Error>>
-instructionHandler[MERGE_BRANCH]    = async (client: Octokit, ins: any): Promise<Error> => await mergeBranch(client, ins);
-instructionHandler[CREATE_LABEL]    = async (client: Octokit, ins: any): Promise<Error> => await createLabel(client, ins);
-instructionHandler[UPDATE_PACKAGE]  = async (client: Octokit, ins: any): Promise<Error> => await updatePackage(client, ins);
-instructionHandler[CREATE_PR]       = async (client: Octokit, ins: any): Promise<Error> => await createPr(client, ins);
-instructionHandler[DRY_RUN]         = async (client: Octokit, ins: any): Promise<Error> => await dryRun(client, ins);
+instructionHandler['merge_branch']    = async (client: Octokit, ins: any): Promise<Error> => await mergeBranch(client, ins);
+instructionHandler['create_label']    = async (client: Octokit, ins: any): Promise<Error> => await createLabel(client, ins);
+instructionHandler['update_package']  = async (client: Octokit, ins: any): Promise<Error> => await updatePackage(client, ins);
+instructionHandler['create_pr']       = async (client: Octokit, ins: any): Promise<Error> => await createPr(client, ins);
+instructionHandler['dry_run']         = async (client: Octokit, ins: any): Promise<Error> => await dryRun(client, ins);
 
 export const processInstructions = async (client: Octokit, instructions: any[]): Promise<Error> => {
     var err: Error = null;
