@@ -1,5 +1,4 @@
 # PRINT INFO
-
 - action: dry_run
   type: info
   labels: 'one,two'

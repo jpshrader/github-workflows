@@ -102,15 +102,15 @@ This utility uses [GitHub Personal Access Tokens](https://docs.github.com/en/aut
 
 In your consuming consuming workflow, you may accept the access token as a parameter or store it as a [secret](https://docs.github.com/en/actions/security-guides/encrypted-secrets#about-encrypted-secrets).
 
-#### Token permissions
+#### Token Permissions
 
 This will of course vary on the types of operations you're performing, but at the least your token will probably need these permissions:
 - repo
 - user
 
-### Merge branches
+### Merge Branches
 
-The `merge_branch` instruction checks whether there are changes to merge from `origin` to `destination`. If there are, it creates a new branch (`merge-{origin}-to-{destination}-{timestamp}`) off of `destination`, merges `origin` into that new branch, and then opens a pull request targeting `destination`. The title, labels, and reviewers of the resulting PR can also be passed to this instruction.
+The `merge_branch` instruction checks whether there are changes to merge from `origin` to `destination`. If there are, it creates a new branch (`merge-{origin}-to-{destination}-{timestamp}`) off of `destination`, merges `origin` into that new branch, and then opens a pull request targeting `destination`. The title, description, labels, and reviewers of the resulting PR can also be passed to this instruction.
 
 Examples:
 ```
@@ -140,7 +140,7 @@ Examples:
 | `reviewers`      | a list of user logins to request reviews from  | `jpshrader`                      | `false`  | `[]`                                 |
 | `team_reviewers` | a list of teams to request reviews from        | `dev_ops`                        | `false`  | `[]`                                 |
 
-### Update package
+### Update Package
 
 The `update_package` instruction updates a specific npm package to a specific version on a given branch. It creates a new branch (`update-{name}-{timeStamp}`) off of `branch`, fetches the file at the given `path` and updates the package (`name`). It then commits this change to the aforementioned branch and opens a PR into the original branch. The title, labels, and reviewers of the resulting PR can also be passed to this instruction.
 
@@ -173,6 +173,38 @@ Examples:
 | `indent`         | numbers of spaces to indent your package file  | `4`                              | `false`  | `2`                                  |
 | `title`          | title of the resulting PR                      | ` `                              | `false`  | `Update {name} to {version}`         |
 | `description`    | description of the resulting PR                | ` `                              | `false`  | ` `                                  |
+| `labels`         | a list of label names to add to the PR         | `bug`                            | `false`  | `[]`                                 |
+| `reviewers`      | a list of user logins to request reviews from  | `jpshrader`                      | `false`  | `[]`                                 |
+| `team_reviewers` | a list of teams to request reviews from        | `dev_ops`                        | `false`  | `[]`                                 |
+
+### Create PR
+
+The `merge_pr` instruction opens a Pull Request from `origin` into `destination`. Title, description, labels, and reviewers can also be passed to this instruction.
+
+Examples:
+```
+- action: create_pr
+  repo:
+    owner:jpshrader
+    slug: github-workflows
+  origin: main
+  destination: test
+  title: 'merge'
+  body: 'test'
+  labels:
+    - bug
+    - documentation
+  reviewers:
+    - jpshrader
+```
+
+| Argument         | Description                                    | Example Value                    | Required | Default Value                        |
+|------------------|------------------------------------------------|----------------------------------|----------|--------------------------------------|
+| `repo`           | object with repo `owner`/`slug` info           | see above example                | `true`   | `N/A`                                |
+| `origin`         | name of the origin branch                      | `main`                           | `true`   | `N/A`                                |
+| `destination`    | name of the destination branch                 | `main`                           | `true`   | `N/A`                                |
+| `title`          | title of the resulting PR                      | `merge branch`                   | `false`  | `Merge {origin} to {destination}`    |
+| `description`    | description of the resulting PR                | `merge branch`                   | `false`  | ` `                                  |
 | `labels`         | a list of label names to add to the PR         | `bug`                            | `false`  | `[]`                                 |
 | `reviewers`      | a list of user logins to request reviews from  | `jpshrader`                      | `false`  | `[]`                                 |
 | `team_reviewers` | a list of teams to request reviews from        | `dev_ops`                        | `false`  | `[]`                                 |
