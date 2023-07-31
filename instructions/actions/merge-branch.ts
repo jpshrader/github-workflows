@@ -15,7 +15,7 @@ export const mergeBranch = async (client: Octokit, ins: any): Promise<Error> => 
         ins.title = `Merge ${ins.origin} into ${ins.destination} (${ins.repo.owner}/${ins.repo.slug})`;
     }
     if (!ins.body) {
-        ins.body = `Generated with the [github-workflows](https://github.com/jpshrader/github-workflows) tool.`;
+        ins.body = 'Generated with the [github-workflows](https://github.com/jpshrader/github-workflows) tool.';
     }
 
     const fromBranchResponse = await getBranch(client, ins.repo.owner, ins.repo.slug, ins.origin);
