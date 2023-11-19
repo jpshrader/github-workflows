@@ -1,4 +1,4 @@
-name: 'GitHub Workflows'
+name: GitHub Workflows
 description: 'Run a set of GitHub api workflow instructions'
 author: jpshrader
 inputs:
@@ -15,13 +15,13 @@ inputs:
 runs:
   using: 'composite'
   steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
       with:
         repository: jpshrader/github-workflows
 
-    - name: Use Node.js 20.x
-      uses: actions/setup-node@v3
-      with: 
+    - name: setup node
+      uses: actions/setup-node@v4
+      with:
         node-version: 20.x
         cache: 'yarn'
 
