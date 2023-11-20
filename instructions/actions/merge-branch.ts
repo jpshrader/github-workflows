@@ -20,13 +20,13 @@ export const mergeBranch = async (client: Octokit, ins: any): Promise<Error> => 
 
     const fromBranchResponse = await getBranch(client, ins.repo.owner, ins.repo.slug, ins.origin);
     if (!fromBranchResponse.isSuccess()) {
-        console.log(`SKIPPING: failed to find branch ${ins.origin} (${ins.repo.owner}/${ins.repo.slug}): ${fromBranchResponse.data.message}`);
+        console.log(`SKIPPING: could not find branch ${ins.origin} (${ins.repo.owner}/${ins.repo.slug}): ${fromBranchResponse.data.message}`);
         return null;
     }
 
     const toBranchResponse = await getBranch(client, ins.repo.owner, ins.repo.slug, ins.destination);
     if (!toBranchResponse.isSuccess()) {
-        console.log(`SKIPPING: failed to find branch ${ins.destination} (${ins.repo.owner}/${ins.repo.slug}): ${toBranchResponse.data.message}`);
+        console.log(`SKIPPING: could not find branch ${ins.destination} (${ins.repo.owner}/${ins.repo.slug}): ${toBranchResponse.data.message}`);
         return null;
     }
 

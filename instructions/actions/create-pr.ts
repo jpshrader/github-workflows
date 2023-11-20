@@ -19,12 +19,12 @@ export const createPr = async (client: Octokit, ins: any) => {
 
     const fromBranchResponse = await getBranch(client, ins.repo.owner, ins.repo.slug, ins.origin);
     if (!fromBranchResponse.isSuccess()) {
-        return new Error(`failed to find branch ${ins.origin} (${ins.repo.owner}/${ins.repo.slug}): ${fromBranchResponse.data.message}`);
+        return new Error(`could not find branch ${ins.origin} (${ins.repo.owner}/${ins.repo.slug}): ${fromBranchResponse.data.message}`);
     }
 
     const toBranchResponse = await getBranch(client, ins.repo.owner, ins.repo.slug, ins.destination);
     if (!toBranchResponse.isSuccess()) {
-        return new Error(`failed to find branch ${ins.destination} (${ins.repo.owner}/${ins.repo.slug}): ${toBranchResponse.data.message}`);
+        return new Error(`could not find branch ${ins.destination} (${ins.repo.owner}/${ins.repo.slug}): ${toBranchResponse.data.message}`);
     }
 
     const pullRequest = await createPullRequest(client, ins.repo.owner, ins.repo.slug, ins.title, ins.body, ins.origin, ins.destination, ins.draft);

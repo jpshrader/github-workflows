@@ -23,7 +23,7 @@ export const updatePackage = async (client: Octokit, ins: any): Promise<Error> =
 
     const branchResponse = await getBranch(client, ins.repo.owner, ins.repo.slug, ins.branch);
     if (!branchResponse.isSuccess()) {
-        console.log(`SKIPPING: failed to find branch ${ins.branch} (${ins.repo.owner}/${ins.repo.slug}): ${branchResponse.data.message}`);
+        console.log(`SKIPPING: could not find branch ${ins.branch} (${ins.repo.owner}/${ins.repo.slug}): ${branchResponse.data.message}`);
         return null;
     }
 
