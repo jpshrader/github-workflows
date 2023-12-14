@@ -20,7 +20,7 @@
         "@octokit/types": "12.3.0",
         "@types/js-yaml": "4.0.9",
         "@types/yargs": "17.0.32",
-        "ts-node": "10.9.1",
+        "ts-node": "10.9.2",
         "typescript": "5.3.3"
     }
 }
