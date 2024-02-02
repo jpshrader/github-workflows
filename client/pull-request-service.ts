@@ -2,7 +2,7 @@ import { Octokit } from 'octokit';
 import { getResponse, GithubApiResponse } from './github-api-client.js';
 
 /**
- * Creates a PR that merges two branches together.`
+ * Creates a PR that merges two branches together.
  *
  * @param {Octokit} client      Github Octokit client.
  * @param {string}  owner       Owner of the repository.
@@ -26,7 +26,7 @@ export const createPullRequest = async (client: Octokit, owner: string, slug: st
 };
 
 /**
- * Adds reviewers to a PR.`
+ * Adds reviewers to a PR.
  *
  * @param {Octokit}  client             Github Octokit client.
  * @param {string}   owner              Owner of the repository.
@@ -46,7 +46,7 @@ export const addReviewers = async (client: Octokit, owner: string, slug: string,
 };
 
 /**
- * Adds reviewers to a PR.`
+ * Adds reviewers to a PR.
  *
  * @param {Octokit}  client             Github Octokit client.
  * @param {string}   owner              Owner of the repository.
@@ -60,5 +60,21 @@ export const addLabels = async (client: Octokit, owner: string, slug: string, pu
         repo: slug,
         issue_number: pullRequestNumber,
         labels: labels
+    }));
+};
+
+/**
+ * Merges a PR.
+ *
+ * @param {Octokit}  client             Github Octokit client.
+ * @param {string}   owner              Owner of the repository.
+ * @param {string}   slug               Name of the repository.
+ * @param {string}   pullRequestNumber  Number Id of the pull request.
+ */
+export const mergePullRequest = async (client: Octokit, owner: string, slug: string, pullRequestNumber: number): Promise<GithubApiResponse<any>> => {
+    return getResponse(async () => await client.request('PUT /repos/{owner}/{repo}/pulls/{pull_number}/merge', {
+        owner: owner,
+        repo: slug,
+        pull_number: pullRequestNumber,
     }));
 };
