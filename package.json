@@ -17,7 +17,7 @@
         "yargs": "17.7.2"
     },
     "devDependencies": {
-        "@octokit/types": "12.4.0",
+        "@octokit/types": "12.5.0",
         "@types/js-yaml": "4.0.9",
         "@types/yargs": "17.0.32",
         "ts-node": "10.9.2",
