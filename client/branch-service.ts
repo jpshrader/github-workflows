@@ -56,7 +56,7 @@ export const mergeBranches = async (client: Octokit, owner: string, slug: string
 };
 
 /**
- * Merges one branch into another.
+ * Compares one branch into another.
  *
  * @param {Octokit} client      Github Octokit client.
  * @param {string}  owner       Owner of the repository.
@@ -65,7 +65,7 @@ export const mergeBranches = async (client: Octokit, owner: string, slug: string
  * @param {string}  destination   Branch to compare into.
  */
 export const compareBranches = async (client: Octokit, owner: string, slug: string, origin: string, destination: string): Promise<GithubApiResponse<any>> => {
-    return getResponse(async () => await client.request('GET /repos/{owner}/{repo}/compare/{basehead}', {
+    return await getResponse(async () => await client.request('GET /repos/{owner}/{repo}/compare/{basehead}', {
         owner: owner,
         repo: slug,
         basehead: `${destination}...${origin}`,

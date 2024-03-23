@@ -1,6 +1,6 @@
 import { Octokit } from 'octokit';
 import { compareBranches, createBranch, getBranch, mergeBranches } from '../../client/branch-service.js';
-import { addLabels, addReviewers, createPullRequest } from '../../client/pull-request-service.js';
+import { addLabels, addReviewers, createPullRequest, mergePullRequest } from '../../client/pull-request-service.js';
 import { argToList } from '../instructions-parser.js';
 import { createOrUpdateFile, deleteFile } from '../../client/repo-service.js';
 
@@ -110,5 +110,13 @@ export const mergeBranch = async (client: Octokit, ins: any): Promise<Error> => 
 
     const prUrl = pullRequest.data.html_url;
     console.log(`SUCCESS: Created Pull Request: ${prUrl}`);
+    if (!isDraft) {
+        const prMergeResponse = await mergePullRequest(client, ins.repo.owner, ins.repo.slug, prNum);
+        if (!prMergeResponse.isSuccess()) {
+            return new Error(`failed to merge pull request: ${prMergeResponse.data.message}`);
+        }
+        console.log(`SUCCESS: Merged Pull Request: ${prUrl}`);
+    }
+
     return null;
 };

@@ -33,7 +33,7 @@ export class GithubApiResponse<T> {
     }
 
     /**
-     * Returns true if the status code is between 200 and 299.
+     * Returns whether the api call succeeded.
      * @returns {boolean} True if the status code is between 200 and 299.
      */
     isSuccess(): boolean {

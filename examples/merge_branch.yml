@@ -17,6 +17,7 @@
   destination: main
   title: release workflows
   body: testing
+  auto_merge: true
   labels:
     - bug
   reviewers:

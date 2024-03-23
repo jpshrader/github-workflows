@@ -136,6 +136,7 @@ Examples:
 | `destination`    | name of the destination branch                 | `main`                           | `true`   | `N/A`                                |
 | `title`          | title of the resulting PR                      | `merge branch`                   | `false`  | `Merge {origin} to {destination}`    |
 | `description`    | description of the resulting PR                | `merge branch`                   | `false`  | ` `                                  |
+| `auto_merge`     | auto-merges the PR if there are no conflicts   | `true`                           | `false`  | `false`                              |
 | `labels`         | a list of label names to add to the PR         | `bug`                            | `false`  | `[]`                                 |
 | `reviewers`      | a list of user logins to request reviews from  | `jpshrader`                      | `false`  | `[]`                                 |
 | `team_reviewers` | a list of teams to request reviews from        | `dev_ops`                        | `false`  | `[]`                                 |
