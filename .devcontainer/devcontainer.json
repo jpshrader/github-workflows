@@ -1,6 +1,6 @@
 {
 	"name": "github-workflows",
-	"image": "mcr.microsoft.com/devcontainers/typescript-node:20-bookworm",
+	"image": "mcr.microsoft.com/devcontainers/typescript-node:22-bookworm",
 	"customizations": {
 		"vscode": {
 			"settings": {},
