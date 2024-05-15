@@ -13,12 +13,13 @@
     "dependencies": {
         "fs": "^0.0.1-security",
         "js-yaml": "4.1.0",
-        "octokit": "3.2.0",
+        "octokit": "4.0.2",
         "yargs": "17.7.2"
     },
     "devDependencies": {
-        "@octokit/types": "13.4.0",
+        "@octokit/types": "13.5.0",
         "@types/js-yaml": "4.0.9",
+        "@types/node": "^20.12.12",
         "@types/yargs": "17.0.32",
         "ts-node": "10.9.2",
         "typescript": "5.4.5"
